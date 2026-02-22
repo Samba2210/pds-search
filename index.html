@@ -46,6 +46,11 @@
 
     .container { max-width: 760px; margin: 0 auto; }
 
+    /* ── Page views ── */
+    .view { display: none; }
+    .view.active { display: block; }
+
+    /* ── Header ── */
     header {
       margin-bottom: 2rem; animation: fadeUp 0.4s ease both;
       display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem;
@@ -58,49 +63,47 @@
     h1 { font-size: 1.75rem; font-weight: 500; letter-spacing: -0.02em; line-height: 1.2; }
     h1 span { color: var(--text-3); font-weight: 300; }
 
+    /* ── Env toggle ── */
     .env-toggle {
       display: flex; align-items: center; gap: 2px;
       background: var(--surface-2); border: 1px solid var(--border);
-      border-radius: var(--radius-sm); padding: 3px;
-      flex-shrink: 0; margin-top: 4px;
+      border-radius: var(--radius-sm); padding: 3px; flex-shrink: 0; margin-top: 4px;
     }
     .env-btn {
       padding: 0.35rem 0.85rem; border-radius: 4px;
-      font-size: 12px; font-weight: 500;
-      font-family: 'DM Mono', monospace;
+      font-size: 12px; font-weight: 500; font-family: 'DM Mono', monospace;
       cursor: pointer; border: none; outline: none;
-      background: transparent; color: var(--text-3);
-      transition: all var(--t);
+      background: transparent; color: var(--text-3); transition: all var(--t);
     }
-    .env-btn.active {
-      background: var(--surface); color: var(--text);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
+    .env-btn.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
 
     .env-badge {
       display: inline-flex; align-items: center; gap: 0.4rem;
       padding: 0.25rem 0.65rem; border-radius: 99px;
       font-size: 11px; font-family: 'DM Mono', monospace;
-      font-weight: 500; margin-bottom: 1.25rem;
-      animation: fadeUp 0.3s ease both;
+      font-weight: 500; margin-bottom: 1.25rem; animation: fadeUp 0.3s ease both;
     }
     .env-badge.sandbox { background: var(--high-bg); color: var(--high); }
     .env-badge.integration { background: var(--int-bg); color: var(--int); }
     .env-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 
+    /* ── Cards ── */
     .card {
       background: var(--surface); border: 1px solid var(--border);
       border-radius: var(--radius); box-shadow: var(--shadow);
       overflow: hidden; margin-bottom: 1.25rem;
       animation: fadeUp 0.4s ease 0.05s both;
     }
-    .card-header { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); }
+    .card-header {
+      padding: 1rem 1.5rem; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
     .card-title {
-      font-size: 11px; font-weight: 500;
-      font-family: 'DM Mono', monospace;
+      font-size: 11px; font-weight: 500; font-family: 'DM Mono', monospace;
       letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-2);
     }
 
+    /* ── Form grid ── */
     .form-grid {
       display: grid; grid-template-columns: 1fr 1fr;
       gap: 1px; background: var(--border);
@@ -110,14 +113,14 @@
       display: flex; flex-direction: column; gap: 0.45rem;
     }
     .form-field.full { grid-column: 1 / -1; }
+    .form-field.thirds { grid-column: span 1; }
 
     label {
-      font-size: 10px; font-weight: 500;
-      letter-spacing: 0.09em; text-transform: uppercase;
-      color: var(--text-3); font-family: 'DM Mono', monospace;
+      font-size: 10px; font-weight: 500; letter-spacing: 0.09em;
+      text-transform: uppercase; color: var(--text-3); font-family: 'DM Mono', monospace;
     }
 
-    input, select {
+    input, select, textarea {
       width: 100%; background: var(--surface-2);
       border: 1px solid var(--border); border-radius: var(--radius-sm);
       padding: 0.55rem 0.75rem; font-size: 14px;
@@ -125,17 +128,20 @@
       outline: none; appearance: none;
       transition: border-color var(--t), box-shadow var(--t);
     }
-    input:focus, select:focus {
+    input:focus, select:focus, textarea:focus {
       border-color: var(--border-strong);
       box-shadow: 0 0 0 3px rgba(128,128,128,0.1);
     }
-    input::placeholder { color: var(--text-3); }
+    input::placeholder, textarea::placeholder { color: var(--text-3); }
+    input:read-only { opacity: 0.6; cursor: not-allowed; }
     select {
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239b9b97' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
       background-repeat: no-repeat; background-position: right 0.75rem center;
       padding-right: 2rem; cursor: pointer;
     }
+    textarea { resize: vertical; min-height: 80px; }
 
+    /* ── Action bar ── */
     .action-bar {
       padding: 1rem 1.5rem; border-top: 1px solid var(--border);
       display: flex; align-items: center; gap: 0.75rem;
@@ -144,8 +150,7 @@
     .btn {
       display: inline-flex; align-items: center; gap: 0.5rem;
       padding: 0.55rem 1.2rem; border-radius: var(--radius-sm);
-      font-size: 14px; font-weight: 500;
-      font-family: 'DM Sans', sans-serif;
+      font-size: 14px; font-weight: 500; font-family: 'DM Sans', sans-serif;
       cursor: pointer; border: 1px solid transparent; outline: none;
       transition: all var(--t);
     }
@@ -154,6 +159,8 @@
     .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
     .btn-ghost { background: transparent; color: var(--text-2); border-color: var(--border); }
     .btn-ghost:hover { background: var(--surface-2); color: var(--text); }
+    .btn-success { background: var(--high); color: white; border-color: var(--high); }
+    .btn-success:hover { opacity: 0.88; }
     .btn-sm { padding: 0.35rem 0.75rem; font-size: 12px; }
 
     .status {
@@ -173,6 +180,7 @@
     .lookup-row { padding: 1.1rem 1.5rem; display: flex; gap: 0.75rem; align-items: flex-end; }
     .lookup-field { flex: 1; display: flex; flex-direction: column; gap: 0.45rem; }
 
+    /* ── Results ── */
     .results-section { animation: fadeUp 0.35s ease both; margin-top: 0.25rem; }
     .results-header {
       display: flex; align-items: center; justify-content: space-between;
@@ -210,8 +218,7 @@
     .score-badge {
       display: inline-flex; align-items: center; gap: 0.35rem;
       padding: 0.3rem 0.65rem; border-radius: 99px;
-      font-size: 11px; font-weight: 500;
-      font-family: 'DM Mono', monospace; white-space: nowrap;
+      font-size: 11px; font-weight: 500; font-family: 'DM Mono', monospace; white-space: nowrap;
     }
     .score-dot { width: 6px; height: 6px; border-radius: 50%; }
     .score-high { background: var(--high-bg); color: var(--high); }
@@ -222,11 +229,12 @@
     .match-footer {
       padding: 0.85rem 1.5rem; border-top: 1px solid var(--border);
       background: var(--surface-2);
-      display: flex; align-items: center; justify-content: space-between;
+      display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
     }
     .match-footer-text { font-size: 13px; color: var(--text-2); }
     .match-footer-text strong { color: var(--text); font-weight: 500; }
 
+    /* ── State boxes ── */
     .state-box {
       background: var(--surface); border: 1px solid var(--border);
       border-radius: var(--radius); padding: 3rem 1.5rem;
@@ -242,6 +250,50 @@
       font-size: 13px; color: var(--low); font-family: 'DM Mono', monospace;
       margin-top: 0.25rem;
     }
+
+    /* ── Referral form ── */
+    .back-bar {
+      display: flex; align-items: center; gap: 0.75rem;
+      margin-bottom: 1.5rem; animation: fadeUp 0.3s ease both;
+    }
+    .back-bar h2 { font-size: 1.25rem; font-weight: 500; letter-spacing: -0.01em; }
+
+    .patient-banner {
+      background: var(--int-bg); border: 1px solid var(--int);
+      border-radius: var(--radius); padding: 1rem 1.5rem;
+      margin-bottom: 1.25rem; animation: fadeUp 0.3s ease 0.05s both;
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    }
+    .patient-banner-name { font-weight: 500; font-size: 15px; color: var(--int); }
+    .patient-banner-nhs { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--int); opacity: 0.8; margin-top: 2px; }
+
+    .section-label {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--text-3);
+      font-family: 'DM Mono', monospace;
+      padding: 0.75rem 1.5rem; background: var(--surface-2);
+      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    }
+
+    .status-pills { display: flex; gap: 0.5rem; flex-wrap: wrap; padding: 1.1rem 1.5rem; background: var(--surface); }
+    .pill {
+      padding: 0.45rem 1rem; border-radius: 99px;
+      border: 1px solid var(--border); font-size: 13px;
+      cursor: pointer; transition: all var(--t);
+      background: var(--surface-2); color: var(--text-2);
+      font-family: 'DM Sans', sans-serif;
+    }
+    .pill.selected-given   { background: var(--high-bg);  color: var(--high);  border-color: var(--high); }
+    .pill.selected-not     { background: var(--low-bg);   color: var(--low);   border-color: var(--low); }
+    .pill.selected-unknown { background: var(--surface-2); color: var(--text); border-color: var(--border-strong); }
+
+    .print-success {
+      background: var(--high-bg); border: 1px solid var(--high);
+      border-radius: var(--radius); padding: 1.5rem;
+      text-align: center; animation: fadeUp 0.3s ease both; margin-top: 1rem;
+    }
+    .print-success-title { font-size: 1rem; font-weight: 500; color: var(--high); margin-bottom: 0.25rem; }
+    .print-success-desc { font-size: 13px; color: var(--high); opacity: 0.8; }
 
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(10px); }
@@ -260,82 +312,204 @@
 <body>
 <div class="container">
 
-  <header>
-    <div>
-      <p class="eyebrow">NHS England · PDS FHIR API</p>
-      <h1>Patient Search <span>/ Demographics</span></h1>
-    </div>
-    <div class="env-toggle">
-      <button class="env-btn active" id="btnSandbox">Sandbox</button>
-      <button class="env-btn" id="btnIntegration">Integration</button>
-    </div>
-  </header>
+  <!-- ══════════════════════════════════════
+       VIEW 1: SEARCH
+  ══════════════════════════════════════ -->
+  <div class="view active" id="viewSearch">
 
-  <div class="env-badge sandbox" id="envBadge">
-    <span class="env-badge-dot"></span>
-    <span id="envBadgeText">Sandbox — synthetic data, no auth</span>
+    <header>
+      <div>
+        <p class="eyebrow">NHS England · PDS FHIR API</p>
+        <h1>Patient Search <span>/ Demographics</span></h1>
+      </div>
+      <div class="env-toggle">
+        <button class="env-btn active" id="btnSandbox">Sandbox</button>
+        <button class="env-btn" id="btnIntegration">Integration</button>
+      </div>
+    </header>
+
+    <div class="env-badge sandbox" id="envBadge">
+      <span class="env-badge-dot"></span>
+      <span id="envBadgeText">Sandbox — synthetic data, no auth</span>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><span class="card-title">Demographic Search</span></div>
+      <div class="form-grid">
+        <div class="form-field">
+          <label for="family">Family Name</label>
+          <input type="text" id="family" placeholder="Smith" />
+        </div>
+        <div class="form-field">
+          <label for="given">Given Name</label>
+          <input type="text" id="given" placeholder="Jane" />
+        </div>
+        <div class="form-field">
+          <label for="birthdate">Date of Birth</label>
+          <input type="date" id="birthdate" />
+        </div>
+        <div class="form-field">
+          <label for="gender">Gender</label>
+          <select id="gender">
+            <option value="">Any</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+            <option value="unknown">Unknown</option>
+          </select>
+        </div>
+        <div class="form-field full">
+          <label for="postcode">Postcode</label>
+          <input type="text" id="postcode" placeholder="DN19 7UD" style="max-width:180px" />
+        </div>
+      </div>
+      <div class="action-bar">
+        <button class="btn btn-primary" id="searchBtn">Search</button>
+        <button class="btn btn-ghost" id="clearBtn">Clear</button>
+        <span class="status" id="searchStatus"></span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><span class="card-title">Direct NHS Number Lookup</span></div>
+      <div class="lookup-row">
+        <div class="lookup-field">
+          <label for="nhsInput">NHS Number</label>
+          <input type="text" id="nhsInput" placeholder="9000000033" maxlength="10"
+                 style="font-family:'DM Mono',monospace;letter-spacing:0.05em;max-width:200px" />
+        </div>
+        <button class="btn btn-primary" id="lookupBtn">Lookup</button>
+      </div>
+    </div>
+
+    <div id="resultsArea"></div>
   </div>
 
-  <div class="card">
-    <div class="card-header"><span class="card-title">Demographic Search</span></div>
-    <div class="form-grid">
-      <div class="form-field">
-        <label for="family">Family Name</label>
-        <input type="text" id="family" placeholder="Smith" />
-      </div>
-      <div class="form-field">
-        <label for="given">Given Name</label>
-        <input type="text" id="given" placeholder="Jane" />
-      </div>
-      <div class="form-field">
-        <label for="birthdate">Date of Birth</label>
-        <input type="date" id="birthdate" />
-      </div>
-      <div class="form-field">
-        <label for="gender">Gender</label>
-        <select id="gender">
-          <option value="">Any</option>
-          <option value="male">Male</option>
-          <option value="female">Female</option>
-          <option value="other">Other</option>
-          <option value="unknown">Unknown</option>
-        </select>
-      </div>
-      <div class="form-field full">
-        <label for="postcode">Postcode</label>
-        <input type="text" id="postcode" placeholder="DN19 7UD" style="max-width:180px" />
-      </div>
-    </div>
-    <div class="action-bar">
-      <button class="btn btn-primary" id="searchBtn">Search</button>
-      <button class="btn btn-ghost" id="clearBtn">Clear</button>
-      <span class="status" id="searchStatus"></span>
-    </div>
-  </div>
+  <!-- ══════════════════════════════════════
+       VIEW 2: REFERRAL FORM
+  ══════════════════════════════════════ -->
+  <div class="view" id="viewReferral">
 
-  <div class="card">
-    <div class="card-header"><span class="card-title">Direct NHS Number Lookup</span></div>
-    <div class="lookup-row">
-      <div class="lookup-field">
-        <label for="nhsInput">NHS Number</label>
-        <input type="text" id="nhsInput" placeholder="9000000033" maxlength="10"
-               style="font-family:'DM Mono',monospace;letter-spacing:0.05em;max-width:200px" />
-      </div>
-      <button class="btn btn-primary" id="lookupBtn">Lookup</button>
+    <div class="back-bar">
+      <button class="btn btn-ghost btn-sm" id="backBtn">← Back</button>
+      <h2>Flu Vaccination Record</h2>
     </div>
-  </div>
 
-  <div id="resultsArea"></div>
+    <div class="patient-banner" id="patientBanner">
+      <div>
+        <div class="patient-banner-name" id="bannerName">—</div>
+        <div class="patient-banner-nhs" id="bannerNHS">—</div>
+      </div>
+    </div>
+
+    <!-- Patient Details (pre-filled, read-only) -->
+    <div class="card">
+      <div class="card-header"><span class="card-title">Patient Details</span></div>
+      <div class="form-grid">
+        <div class="form-field">
+          <label>Full Name</label>
+          <input type="text" id="rf_name" readonly />
+        </div>
+        <div class="form-field">
+          <label>NHS Number</label>
+          <input type="text" id="rf_nhs" readonly style="font-family:'DM Mono',monospace;letter-spacing:0.05em" />
+        </div>
+        <div class="form-field">
+          <label>Date of Birth</label>
+          <input type="text" id="rf_dob" readonly />
+        </div>
+        <div class="form-field">
+          <label>Phone Number</label>
+          <input type="text" id="rf_phone" readonly />
+        </div>
+        <div class="form-field full">
+          <label>Address / Postcode</label>
+          <input type="text" id="rf_postcode" readonly />
+        </div>
+        <div class="form-field full">
+          <label>GP Practice</label>
+          <input type="text" id="rf_gp" readonly />
+        </div>
+      </div>
+    </div>
+
+    <!-- Vaccination Status -->
+    <div class="card">
+      <div class="card-header"><span class="card-title">Flu Vaccination</span></div>
+
+      <div class="section-label">Vaccination Status</div>
+      <div class="status-pills">
+        <button class="pill" id="pill_given"   onclick="selectStatus('given')">✓ Given</button>
+        <button class="pill" id="pill_not"     onclick="selectStatus('not')">✕ Not Given</button>
+        <button class="pill" id="pill_unknown" onclick="selectStatus('unknown')">? Unknown</button>
+      </div>
+
+      <div class="form-grid" id="vaccinationFields">
+        <div class="form-field">
+          <label for="rf_date">Date Administered</label>
+          <input type="date" id="rf_date" />
+        </div>
+        <div class="form-field">
+          <label for="rf_by">Administered By</label>
+          <input type="text" id="rf_by" placeholder="Clinician name" />
+        </div>
+        <div class="form-field">
+          <label for="rf_brand">Vaccine Brand</label>
+          <input type="text" id="rf_brand" placeholder="e.g. Fluenz Tetra" />
+        </div>
+        <div class="form-field">
+          <label for="rf_batch">Batch Number</label>
+          <input type="text" id="rf_batch" placeholder="e.g. AB1234" />
+        </div>
+        <div class="form-field full">
+          <label for="rf_site">Site</label>
+          <select id="rf_site">
+            <option value="">Select site</option>
+            <option>Left arm (deltoid)</option>
+            <option>Right arm (deltoid)</option>
+            <option>Left thigh</option>
+            <option>Right thigh</option>
+            <option>Nasal (intranasal)</option>
+          </select>
+        </div>
+        <div class="form-field full">
+          <label for="rf_contra">Contraindications / Reason Not Given</label>
+          <textarea id="rf_contra" placeholder="Note any contraindications or reason vaccination was not administered..."></textarea>
+        </div>
+      </div>
+
+      <div class="action-bar">
+        <button class="btn btn-success" onclick="printForm()">🖨 Print / Save PDF</button>
+        <button class="btn btn-ghost" id="backBtn2">Cancel</button>
+      </div>
+    </div>
+
+    <div id="printSuccess" style="display:none">
+      <div class="print-success">
+        <div class="print-success-title">Ready to print</div>
+        <div class="print-success-desc">Use your browser's print dialog to save as PDF or send to a printer.</div>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <script>
-  // ── Endpoints ──────────────────────────────────────────────────
+  // ── Config ─────────────────────────────────────────────────────
   const SANDBOX_BASE = "https://sandbox.api.service.nhs.uk/personal-demographics/FHIR/R4";
-  const LOCAL_BASE   = "https://web-production-ee325.up.railway.app";
+  const RAILWAY_BASE = "https://web-production-ee325.up.railway.app"; // ← your Railway URL
 
   let currentEnv = "sandbox";
+  let selectedPatient = null;
 
-  // ── Helpers ────────────────────────────────────────────────────
+  // ── View switcher ──────────────────────────────────────────────
+  function showView(id) {
+    document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  // ── NHS helpers ────────────────────────────────────────────────
   function sandboxHeaders() {
     return {
       "Accept": "application/fhir+json",
@@ -387,31 +561,25 @@
     return [parseSinglePatient(await res.json(), 1.0)];
   }
 
-  // ── Integration calls (via local FastAPI) ──────────────────────
+  // ── Integration calls ──────────────────────────────────────────
   async function searchIntegration(p) {
     const qs = new URLSearchParams({ family: p.family });
     if (p.given)     qs.set("given", p.given);
     if (p.birthdate) qs.set("birthdate", p.birthdate);
     if (p.gender)    qs.set("gender", p.gender);
     if (p.postcode)  qs.set("postcode", p.postcode);
-    const res = await fetch(`${LOCAL_BASE}/patient/search?${qs}`);
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.detail || `HTTP ${res.status}`);
-    }
+    const res = await fetch(`${RAILWAY_BASE}/patient/search?${qs}`);
+    if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.detail || `HTTP ${res.status}`); }
     return (await res.json()).matches;
   }
 
   async function lookupIntegration(nhs) {
-    const res = await fetch(`${LOCAL_BASE}/patient/${nhs}`);
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.detail || `HTTP ${res.status}`);
-    }
+    const res = await fetch(`${RAILWAY_BASE}/patient/${nhs}`);
+    if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.detail || `HTTP ${res.status}`); }
     return [await res.json()];
   }
 
-  // ── Actions ────────────────────────────────────────────────────
+  // ── Search / Lookup ────────────────────────────────────────────
   async function runSearch() {
     const family = document.getElementById("family").value.trim();
     if (!family) { showError("Family name is required."); return; }
@@ -455,7 +623,7 @@
     document.getElementById("searchStatus").textContent = "";
   }
 
-  // ── Render ─────────────────────────────────────────────────────
+  // ── Render results ─────────────────────────────────────────────
   function renderMatches(matches) {
     const area = document.getElementById("resultsArea");
     if (!matches || !matches.length) {
@@ -464,6 +632,7 @@
     }
     const cards = matches.map((m, i) => {
       const isHigh = m.score >= 1.0;
+      const safeIdx = i;
       return `
         <div class="match-card" style="animation-delay:${i * 0.06}s">
           <div class="match-inner">
@@ -484,7 +653,10 @@
           </div>
           <div class="match-footer">
             <span class="match-footer-text">NHS <strong>${formatNHS(m.nhsNumber)}</strong> · ${m.fullName}</span>
-            <button class="btn btn-ghost btn-sm" onclick="copyToClipboard('${m.nhsNumber}', this)">Copy NHS No.</button>
+            <div style="display:flex;gap:0.5rem">
+              <button class="btn btn-ghost btn-sm" onclick="copyToClipboard('${m.nhsNumber}', this)">Copy NHS No.</button>
+              <button class="btn btn-primary btn-sm" onclick="openReferral(${safeIdx})">Open Referral →</button>
+            </div>
           </div>
         </div>`;
     }).join("");
@@ -497,8 +669,54 @@
         </div>
         ${cards}
       </div>`;
+
+    window._matches = matches;
   }
 
+  // ── Referral form ──────────────────────────────────────────────
+  function openReferral(idx) {
+    const m = window._matches[idx];
+    selectedPatient = m;
+
+    // Banner
+    document.getElementById("bannerName").textContent = m.fullName;
+    document.getElementById("bannerNHS").textContent  = `NHS ${formatNHS(m.nhsNumber)}`;
+
+    // Pre-fill read-only fields
+    document.getElementById("rf_name").value    = m.fullName;
+    document.getElementById("rf_nhs").value     = formatNHS(m.nhsNumber);
+    document.getElementById("rf_dob").value     = m.dob;
+    document.getElementById("rf_phone").value   = m.phone !== "—" ? m.phone : "";
+    document.getElementById("rf_postcode").value = m.postcode !== "—" ? m.postcode : "";
+    document.getElementById("rf_gp").value      = m.gp !== "—" ? m.gp : "";
+
+    // Reset vaccination fields
+    document.getElementById("rf_date").value    = new Date().toISOString().split("T")[0];
+    document.getElementById("rf_by").value      = "";
+    document.getElementById("rf_brand").value   = "";
+    document.getElementById("rf_batch").value   = "";
+    document.getElementById("rf_site").value    = "";
+    document.getElementById("rf_contra").value  = "";
+    document.getElementById("printSuccess").style.display = "none";
+    ["pill_given","pill_not","pill_unknown"].forEach(id => {
+      document.getElementById(id).className = "pill";
+    });
+
+    showView("viewReferral");
+  }
+
+  function selectStatus(status) {
+    document.getElementById("pill_given").className   = "pill" + (status === "given"   ? " selected-given"   : "");
+    document.getElementById("pill_not").className     = "pill" + (status === "not"     ? " selected-not"     : "");
+    document.getElementById("pill_unknown").className = "pill" + (status === "unknown" ? " selected-unknown" : "");
+  }
+
+  function printForm() {
+    document.getElementById("printSuccess").style.display = "block";
+    setTimeout(() => window.print(), 300);
+  }
+
+  // ── Helpers ────────────────────────────────────────────────────
   function showError(msg) {
     document.getElementById("resultsArea").innerHTML = `<div class="error-box">Error: ${msg}</div>`;
   }
@@ -524,7 +742,6 @@
     });
   }
 
-  // ── Environment switcher ───────────────────────────────────────
   function setEnv(env) {
     currentEnv = env;
     document.getElementById("btnSandbox").classList.toggle("active", env === "sandbox");
@@ -533,7 +750,7 @@
     badge.className = `env-badge ${env}`;
     document.getElementById("envBadgeText").textContent = env === "sandbox"
       ? "Sandbox — synthetic data, no auth"
-      : "Integration — real test patients via local backend";
+      : "Integration — real test patients via Railway backend";
     clearAll();
   }
 
@@ -543,6 +760,9 @@
   document.getElementById("lookupBtn").addEventListener("click", runLookup);
   document.getElementById("btnSandbox").addEventListener("click", () => setEnv("sandbox"));
   document.getElementById("btnIntegration").addEventListener("click", () => setEnv("integration"));
+  document.getElementById("backBtn").addEventListener("click", () => showView("viewSearch"));
+  document.getElementById("backBtn2").addEventListener("click", () => showView("viewSearch"));
+
   document.getElementById("nhsInput").addEventListener("keydown", e => { if (e.key === "Enter") runLookup(); });
   ["family","given","birthdate","postcode"].forEach(id => {
     document.getElementById(id).addEventListener("keydown", e => { if (e.key === "Enter") runSearch(); });
