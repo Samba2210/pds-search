@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PDS Search</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f5f5f3; --surface: #ffffff; --surface-2: #f0f0ee;
+      --border: #e2e2de; --border-strong: #c8c8c4;
+      --text: #1a1a18; --text-2: #6b6b67; --text-3: #9b9b97;
+      --accent: #1a1a18; --accent-fg: #f5f5f3;
+      --high: #2d6a2d; --high-bg: #edf7ed;
+      --low: #8b2e2e; --low-bg: #fdf0f0;
+      --int: #1a3a6a; --int-bg: #edf2fb;
+      --radius: 10px; --radius-sm: 6px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+      --shadow-lg: 0 2px 8px rgba(0,0,0,0.08), 0 16px 48px rgba(0,0,0,0.06);
+      --t: 180ms cubic-bezier(0.4,0,0.2,1);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #111110; --surface: #1c1c1a; --surface-2: #242422;
+        --border: #2e2e2c; --border-strong: #3e3e3a;
+        --text: #f0f0ee; --text-2: #a0a09c; --text-3: #6a6a66;
+        --accent: #f0f0ee; --accent-fg: #111110;
+        --high: #4caf50; --high-bg: #1a2e1a;
+        --low: #e05c5c; --low-bg: #2a1414;
+        --int: #7aaaff; --int-bg: #141e2e;
+        --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 4px 16px rgba(0,0,0,0.2);
+        --shadow-lg: 0 2px 8px rgba(0,0,0,0.4), 0 16px 48px rgba(0,0,0,0.3);
+      }
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg); color: var(--text);
+      min-height: 100vh; padding: 2rem 1rem 4rem;
+      font-size: 15px; line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container { max-width: 760px; margin: 0 auto; }
+
+    header {
+      margin-bottom: 2rem; animation: fadeUp 0.4s ease both;
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem;
+    }
+    .eyebrow {
+      font-family: 'DM Mono', monospace; font-size: 11px;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--text-3); margin-bottom: 0.5rem;
+    }
+    h1 { font-size: 1.75rem; font-weight: 500; letter-spacing: -0.02em; line-height: 1.2; }
+    h1 span { color: var(--text-3); font-weight: 300; }
+
+    .env-toggle {
+      display: flex; align-items: center; gap: 2px;
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 3px;
+      flex-shrink: 0; margin-top: 4px;
+    }
+    .env-btn {
+      padding: 0.35rem 0.85rem; border-radius: 4px;
+      font-size: 12px; font-weight: 500;
+      font-family: 'DM Mono', monospace;
+      cursor: pointer; border: none; outline: none;
+      background: transparent; color: var(--text-3);
+      transition: all var(--t);
+    }
+    .env-btn.active {
+      background: var(--surface); color: var(--text);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .env-badge {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.25rem 0.65rem; border-radius: 99px;
+      font-size: 11px; font-family: 'DM Mono', monospace;
+      font-weight: 500; margin-bottom: 1.25rem;
+      animation: fadeUp 0.3s ease both;
+    }
+    .env-badge.sandbox { background: var(--high-bg); color: var(--high); }
+    .env-badge.integration { background: var(--int-bg); color: var(--int); }
+    .env-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); box-shadow: var(--shadow);
+      overflow: hidden; margin-bottom: 1.25rem;
+      animation: fadeUp 0.4s ease 0.05s both;
+    }
+    .card-header { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); }
+    .card-title {
+      font-size: 11px; font-weight: 500;
+      font-family: 'DM Mono', monospace;
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-2);
+    }
+
+    .form-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1px; background: var(--border);
+    }
+    .form-field {
+      background: var(--surface); padding: 1.1rem 1.5rem;
+      display: flex; flex-direction: column; gap: 0.45rem;
+    }
+    .form-field.full { grid-column: 1 / -1; }
+
+    label {
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 0.09em; text-transform: uppercase;
+      color: var(--text-3); font-family: 'DM Mono', monospace;
+    }
+
+    input, select {
+      width: 100%; background: var(--surface-2);
+      border: 1px solid var(--border); border-radius: var(--radius-sm);
+      padding: 0.55rem 0.75rem; font-size: 14px;
+      font-family: 'DM Sans', sans-serif; color: var(--text);
+      outline: none; appearance: none;
+      transition: border-color var(--t), box-shadow var(--t);
+    }
+    input:focus, select:focus {
+      border-color: var(--border-strong);
+      box-shadow: 0 0 0 3px rgba(128,128,128,0.1);
+    }
+    input::placeholder { color: var(--text-3); }
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239b9b97' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 0.75rem center;
+      padding-right: 2rem; cursor: pointer;
+    }
+
+    .action-bar {
+      padding: 1rem 1.5rem; border-top: 1px solid var(--border);
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.55rem 1.2rem; border-radius: var(--radius-sm);
+      font-size: 14px; font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer; border: 1px solid transparent; outline: none;
+      transition: all var(--t);
+    }
+    .btn-primary { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+    .btn-primary:hover:not(:disabled) { opacity: 0.82; }
+    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-ghost { background: transparent; color: var(--text-2); border-color: var(--border); }
+    .btn-ghost:hover { background: var(--surface-2); color: var(--text); }
+    .btn-sm { padding: 0.35rem 0.75rem; font-size: 12px; }
+
+    .status {
+      margin-left: auto; font-size: 12px;
+      font-family: 'DM Mono', monospace; color: var(--text-3);
+    }
+
+    .spinner {
+      width: 13px; height: 13px;
+      border: 2px solid rgba(255,255,255,0.3); border-top-color: white;
+      border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block;
+    }
+    @media (prefers-color-scheme: dark) {
+      .spinner { border-color: rgba(0,0,0,0.25); border-top-color: #111; }
+    }
+
+    .lookup-row { padding: 1.1rem 1.5rem; display: flex; gap: 0.75rem; align-items: flex-end; }
+    .lookup-field { flex: 1; display: flex; flex-direction: column; gap: 0.45rem; }
+
+    .results-section { animation: fadeUp 0.35s ease both; margin-top: 0.25rem; }
+    .results-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 0.75rem; padding: 0 0.25rem;
+    }
+    .results-label {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-3); font-family: 'DM Mono', monospace;
+    }
+    .results-count { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text-3); }
+
+    .match-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); box-shadow: var(--shadow);
+      overflow: hidden; margin-bottom: 0.75rem;
+      animation: fadeUp 0.3s ease both;
+      transition: box-shadow var(--t), border-color var(--t);
+    }
+    .match-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-lg); }
+
+    .match-inner {
+      padding: 1.25rem 1.5rem;
+      display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: start;
+    }
+    .match-name { font-size: 1rem; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 0.2rem; }
+    .match-nhs { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--text-2); letter-spacing: 0.04em; }
+    .match-meta { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; margin-top: 0.85rem; }
+    .meta-item { display: flex; flex-direction: column; gap: 2px; }
+    .meta-label {
+      font-size: 10px; font-weight: 500; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-3); font-family: 'DM Mono', monospace;
+    }
+    .meta-value { font-size: 13px; color: var(--text); }
+
+    .score-badge {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      padding: 0.3rem 0.65rem; border-radius: 99px;
+      font-size: 11px; font-weight: 500;
+      font-family: 'DM Mono', monospace; white-space: nowrap;
+    }
+    .score-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .score-high { background: var(--high-bg); color: var(--high); }
+    .score-high .score-dot { background: var(--high); }
+    .score-low  { background: var(--low-bg); color: var(--low); }
+    .score-low  .score-dot { background: var(--low); }
+
+    .match-footer {
+      padding: 0.85rem 1.5rem; border-top: 1px solid var(--border);
+      background: var(--surface-2);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .match-footer-text { font-size: 13px; color: var(--text-2); }
+    .match-footer-text strong { color: var(--text); font-weight: 500; }
+
+    .state-box {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 3rem 1.5rem;
+      text-align: center; box-shadow: var(--shadow);
+    }
+    .state-icon { font-size: 1.75rem; margin-bottom: 0.75rem; opacity: 0.35; }
+    .state-title { font-size: 15px; font-weight: 500; margin-bottom: 0.25rem; }
+    .state-desc { font-size: 13px; color: var(--text-3); }
+
+    .error-box {
+      background: var(--low-bg); border: 1px solid var(--low);
+      border-radius: var(--radius); padding: 1rem 1.25rem;
+      font-size: 13px; color: var(--low); font-family: 'DM Mono', monospace;
+      margin-top: 0.25rem;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 540px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .form-field.full { grid-column: 1; }
+      .match-inner { grid-template-columns: 1fr; }
+      header { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div>
+      <p class="eyebrow">NHS England · PDS FHIR API</p>
+      <h1>Patient Search <span>/ Demographics</span></h1>
+    </div>
+    <div class="env-toggle">
+      <button class="env-btn active" id="btnSandbox">Sandbox</button>
+      <button class="env-btn" id="btnIntegration">Integration</button>
+    </div>
+  </header>
+
+  <div class="env-badge sandbox" id="envBadge">
+    <span class="env-badge-dot"></span>
+    <span id="envBadgeText">Sandbox — synthetic data, no auth</span>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="card-title">Demographic Search</span></div>
+    <div class="form-grid">
+      <div class="form-field">
+        <label for="family">Family Name</label>
+        <input type="text" id="family" placeholder="Smith" />
+      </div>
+      <div class="form-field">
+        <label for="given">Given Name</label>
+        <input type="text" id="given" placeholder="Jane" />
+      </div>
+      <div class="form-field">
+        <label for="birthdate">Date of Birth</label>
+        <input type="date" id="birthdate" />
+      </div>
+      <div class="form-field">
+        <label for="gender">Gender</label>
+        <select id="gender">
+          <option value="">Any</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other</option>
+          <option value="unknown">Unknown</option>
+        </select>
+      </div>
+      <div class="form-field full">
+        <label for="postcode">Postcode</label>
+        <input type="text" id="postcode" placeholder="DN19 7UD" style="max-width:180px" />
+      </div>
+    </div>
+    <div class="action-bar">
+      <button class="btn btn-primary" id="searchBtn">Search</button>
+      <button class="btn btn-ghost" id="clearBtn">Clear</button>
+      <span class="status" id="searchStatus"></span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="card-title">Direct NHS Number Lookup</span></div>
+    <div class="lookup-row">
+      <div class="lookup-field">
+        <label for="nhsInput">NHS Number</label>
+        <input type="text" id="nhsInput" placeholder="9000000033" maxlength="10"
+               style="font-family:'DM Mono',monospace;letter-spacing:0.05em;max-width:200px" />
+      </div>
+      <button class="btn btn-primary" id="lookupBtn">Lookup</button>
+    </div>
+  </div>
+
+  <div id="resultsArea"></div>
+</div>
+
+<script>
+  // ── Endpoints ──────────────────────────────────────────────────
+  const SANDBOX_BASE = "https://sandbox.api.service.nhs.uk/personal-demographics/FHIR/R4";
+  const LOCAL_BASE   = "http://localhost:8000";
+
+  let currentEnv = "sandbox";
+
+  // ── Helpers ────────────────────────────────────────────────────
+  function sandboxHeaders() {
+    return {
+      "Accept": "application/fhir+json",
+      "X-Request-ID": crypto.randomUUID(),
+      "nhsd-end-user-organisation-ods": "Y12345",
+      "nhsd-session-urid": "555254240100",
+    };
+  }
+
+  function formatNHS(n) {
+    if (!n || n === "—") return n;
+    return String(n).replace(/(\d{3})(\d{3})(\d{4})/, "$1 $2 $3");
+  }
+
+  function parseSinglePatient(patient, score) {
+    const nhsNumber = (patient.identifier || [])
+      .find(i => (i.system || "").includes("nhs-number"))?.value || "—";
+    const names = patient.name || [];
+    const name  = names.find(n => n.use === "usual") || names[0] || {};
+    const fullName = [(name.given || []).join(" "), name.family].filter(Boolean).join(" ") || "Unknown";
+    const addresses = patient.address || [];
+    const addr = addresses.find(a => a.use === "home") || addresses[0] || {};
+    const phone = (patient.telecom || []).find(t => t.system === "phone")?.value || "—";
+    const gp    = (patient.generalPractitioner || [])[0]?.display || "—";
+    return { nhsNumber, fullName, dob: patient.birthDate || "—", gender: patient.gender || "—", postcode: addr.postalCode || "—", phone, gp, score };
+  }
+
+  function parseBundle(bundle) {
+    return (bundle.entry || [])
+      .map(e => parseSinglePatient(e.resource, e.search?.score ?? 0))
+      .sort((a, b) => b.score - a.score);
+  }
+
+  // ── Sandbox calls ──────────────────────────────────────────────
+  async function searchSandbox(p) {
+    const qs = new URLSearchParams({ family: p.family });
+    if (p.given)     qs.set("given", p.given);
+    if (p.birthdate) qs.set("birthdate", `eq${p.birthdate}`);
+    if (p.gender)    qs.set("gender", p.gender);
+    if (p.postcode)  qs.set("address-postalcode", p.postcode);
+    const res = await fetch(`${SANDBOX_BASE}/Patient?${qs}`, { headers: sandboxHeaders() });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return parseBundle(await res.json());
+  }
+
+  async function lookupSandbox(nhs) {
+    const res = await fetch(`${SANDBOX_BASE}/Patient/${nhs}`, { headers: sandboxHeaders() });
+    if (!res.ok) throw new Error(`HTTP ${res.status} — check NHS number`);
+    return [parseSinglePatient(await res.json(), 1.0)];
+  }
+
+  // ── Integration calls (via local FastAPI) ──────────────────────
+  async function searchIntegration(p) {
+    const qs = new URLSearchParams({ family: p.family });
+    if (p.given)     qs.set("given", p.given);
+    if (p.birthdate) qs.set("birthdate", p.birthdate);
+    if (p.gender)    qs.set("gender", p.gender);
+    if (p.postcode)  qs.set("postcode", p.postcode);
+    const res = await fetch(`${LOCAL_BASE}/patient/search?${qs}`);
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || `HTTP ${res.status}`);
+    }
+    return (await res.json()).matches;
+  }
+
+  async function lookupIntegration(nhs) {
+    const res = await fetch(`${LOCAL_BASE}/patient/${nhs}`);
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || `HTTP ${res.status}`);
+    }
+    return [await res.json()];
+  }
+
+  // ── Actions ────────────────────────────────────────────────────
+  async function runSearch() {
+    const family = document.getElementById("family").value.trim();
+    if (!family) { showError("Family name is required."); return; }
+    setSearchLoading(true);
+    try {
+      const p = {
+        family,
+        given:     document.getElementById("given").value.trim(),
+        birthdate: document.getElementById("birthdate").value,
+        gender:    document.getElementById("gender").value,
+        postcode:  document.getElementById("postcode").value.trim(),
+      };
+      const matches = currentEnv === "sandbox" ? await searchSandbox(p) : await searchIntegration(p);
+      renderMatches(matches);
+      document.getElementById("searchStatus").textContent = `${matches.length} result${matches.length !== 1 ? "s" : ""}`;
+    } catch (err) {
+      showError(err.message);
+    } finally {
+      setSearchLoading(false);
+    }
+  }
+
+  async function runLookup() {
+    const nhs = document.getElementById("nhsInput").value.trim().replace(/\s/g, "");
+    if (!nhs) return;
+    setLookupLoading(true);
+    try {
+      const matches = currentEnv === "sandbox" ? await lookupSandbox(nhs) : await lookupIntegration(nhs);
+      renderMatches(matches);
+    } catch (err) {
+      showError(err.message);
+    } finally {
+      setLookupLoading(false);
+    }
+  }
+
+  function clearAll() {
+    ["family","given","birthdate","postcode","nhsInput"].forEach(id => document.getElementById(id).value = "");
+    document.getElementById("gender").value = "";
+    document.getElementById("resultsArea").innerHTML = "";
+    document.getElementById("searchStatus").textContent = "";
+  }
+
+  // ── Render ─────────────────────────────────────────────────────
+  function renderMatches(matches) {
+    const area = document.getElementById("resultsArea");
+    if (!matches || !matches.length) {
+      area.innerHTML = `<div class="results-section"><div class="state-box"><div class="state-icon">◎</div><div class="state-title">No patients found</div><div class="state-desc">Try broadening your search criteria.</div></div></div>`;
+      return;
+    }
+    const cards = matches.map((m, i) => {
+      const isHigh = m.score >= 1.0;
+      return `
+        <div class="match-card" style="animation-delay:${i * 0.06}s">
+          <div class="match-inner">
+            <div>
+              <div class="match-name">${m.fullName}</div>
+              <div class="match-nhs">${formatNHS(m.nhsNumber)}</div>
+              <div class="match-meta">
+                <div class="meta-item"><span class="meta-label">Date of Birth</span><span class="meta-value">${m.dob || "—"}</span></div>
+                <div class="meta-item"><span class="meta-label">Gender</span><span class="meta-value" style="text-transform:capitalize">${m.gender || "—"}</span></div>
+                <div class="meta-item"><span class="meta-label">Postcode</span><span class="meta-value">${m.postcode || "—"}</span></div>
+                <div class="meta-item"><span class="meta-label">Phone</span><span class="meta-value">${m.phone || "—"}</span></div>
+                <div class="meta-item"><span class="meta-label">GP</span><span class="meta-value">${m.gp || "—"}</span></div>
+              </div>
+            </div>
+            <span class="score-badge ${isHigh ? 'score-high' : 'score-low'}">
+              <span class="score-dot"></span>${isHigh ? "High confidence" : "Low confidence"}
+            </span>
+          </div>
+          <div class="match-footer">
+            <span class="match-footer-text">NHS <strong>${formatNHS(m.nhsNumber)}</strong> · ${m.fullName}</span>
+            <button class="btn btn-ghost btn-sm" onclick="copyToClipboard('${m.nhsNumber}', this)">Copy NHS No.</button>
+          </div>
+        </div>`;
+    }).join("");
+
+    area.innerHTML = `
+      <div class="results-section">
+        <div class="results-header">
+          <span class="results-label">Results</span>
+          <span class="results-count">${matches.length} match${matches.length !== 1 ? "es" : ""}</span>
+        </div>
+        ${cards}
+      </div>`;
+  }
+
+  function showError(msg) {
+    document.getElementById("resultsArea").innerHTML = `<div class="error-box">Error: ${msg}</div>`;
+  }
+
+  function setSearchLoading(on) {
+    const btn = document.getElementById("searchBtn");
+    btn.disabled = on;
+    btn.innerHTML = on ? `<span class="spinner"></span> Searching…` : "Search";
+    if (on) document.getElementById("searchStatus").textContent = "Searching…";
+  }
+
+  function setLookupLoading(on) {
+    const btn = document.getElementById("lookupBtn");
+    btn.disabled = on;
+    btn.innerHTML = on ? `<span class="spinner"></span>` : "Lookup";
+  }
+
+  function copyToClipboard(text, btn) {
+    navigator.clipboard.writeText(text).then(() => {
+      const orig = btn.textContent;
+      btn.textContent = "Copied!";
+      setTimeout(() => btn.textContent = orig, 1500);
+    });
+  }
+
+  // ── Environment switcher ───────────────────────────────────────
+  function setEnv(env) {
+    currentEnv = env;
+    document.getElementById("btnSandbox").classList.toggle("active", env === "sandbox");
+    document.getElementById("btnIntegration").classList.toggle("active", env === "integration");
+    const badge = document.getElementById("envBadge");
+    badge.className = `env-badge ${env}`;
+    document.getElementById("envBadgeText").textContent = env === "sandbox"
+      ? "Sandbox — synthetic data, no auth"
+      : "Integration — real test patients via local backend";
+    clearAll();
+  }
+
+  // ── Wire up ────────────────────────────────────────────────────
+  document.getElementById("searchBtn").addEventListener("click", runSearch);
+  document.getElementById("clearBtn").addEventListener("click", clearAll);
+  document.getElementById("lookupBtn").addEventListener("click", runLookup);
+  document.getElementById("btnSandbox").addEventListener("click", () => setEnv("sandbox"));
+  document.getElementById("btnIntegration").addEventListener("click", () => setEnv("integration"));
+  document.getElementById("nhsInput").addEventListener("keydown", e => { if (e.key === "Enter") runLookup(); });
+  ["family","given","birthdate","postcode"].forEach(id => {
+    document.getElementById(id).addEventListener("keydown", e => { if (e.key === "Enter") runSearch(); });
+  });
+</script>
+</body>
+</html>
