@@ -3,11 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PDS Search</title>
+  <title>PDS Clinical Hub</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
       --bg: #f5f5f3; --surface: #ffffff; --surface-2: #f0f0ee;
       --border: #e2e2de; --border-strong: #c8c8c4;
@@ -22,7 +21,6 @@
       --shadow-lg: 0 2px 8px rgba(0,0,0,0.08), 0 16px 48px rgba(0,0,0,0.06);
       --t: 180ms cubic-bezier(0.4,0,0.2,1);
     }
-
     @media (prefers-color-scheme: dark) {
       :root {
         --bg: #111110; --surface: #1c1c1a; --surface-2: #242422;
@@ -37,124 +35,47 @@
         --shadow-lg: 0 2px 8px rgba(0,0,0,0.4), 0 16px 48px rgba(0,0,0,0.3);
       }
     }
-
-    body {
-      font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text);
-      min-height: 100vh; padding: 2rem 1rem 4rem;
-      font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased;
-    }
-
-    .container { max-width: 760px; margin: 0 auto; }
-    .view { display: none; }
-    .view.active { display: block; }
-
-    /* Header */
-    header {
-      margin-bottom: 2rem; animation: fadeUp 0.4s ease both;
-      display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem;
-    }
-    .eyebrow {
-      font-family: 'DM Mono', monospace; font-size: 11px;
-      letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-3); margin-bottom: 0.5rem;
-    }
-    h1 { font-size: 1.75rem; font-weight: 500; letter-spacing: -0.02em; line-height: 1.2; }
-    h1 span { color: var(--text-3); font-weight: 300; }
-
-    .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem; margin-top: 4px; }
-
-    /* Nav tabs */
-    .nav-tabs {
-      display: flex; gap: 2px; background: var(--surface-2);
-      border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 3px;
-    }
-    .nav-tab {
-      padding: 0.35rem 0.85rem; border-radius: 4px;
-      font-size: 12px; font-weight: 500; font-family: 'DM Mono', monospace;
-      cursor: pointer; border: none; outline: none;
-      background: transparent; color: var(--text-3); transition: all var(--t);
-      position: relative;
-    }
-    .nav-tab.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-    .nav-tab .badge {
-      position: absolute; top: -4px; right: -4px;
-      background: var(--accent); color: var(--accent-fg);
-      width: 16px; height: 16px; border-radius: 50%;
-      font-size: 9px; display: flex; align-items: center; justify-content: center;
-      font-family: 'DM Mono', monospace;
-    }
-
-    /* Env toggle */
-    .env-toggle {
-      display: flex; gap: 2px; background: var(--surface-2);
-      border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 3px;
-    }
-    .env-btn {
-      padding: 0.3rem 0.75rem; border-radius: 4px;
-      font-size: 11px; font-weight: 500; font-family: 'DM Mono', monospace;
-      cursor: pointer; border: none; outline: none;
-      background: transparent; color: var(--text-3); transition: all var(--t);
-    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+    .app { display: flex; min-height: 100vh; }
+    .sidebar { width: 220px; flex-shrink: 0; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 1.5rem 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-logo { padding: 0 1.25rem 1.5rem; border-bottom: 1px solid var(--border); margin-bottom: 0.75rem; }
+    .sidebar-logo-eyebrow { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-3); margin-bottom: 0.25rem; }
+    .sidebar-logo-title { font-size: 15px; font-weight: 500; letter-spacing: -0.01em; }
+    .nav-section { padding: 0 0.75rem; margin-bottom: 0.25rem; }
+    .nav-section-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); padding: 0.5rem 0.5rem 0.25rem; }
+    .nav-item { display: flex; align-items: center; gap: 0.65rem; padding: 0.55rem 0.75rem; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; color: var(--text-2); cursor: pointer; border: none; background: transparent; width: 100%; text-align: left; transition: all var(--t); }
+    .nav-item:hover { background: var(--surface-2); color: var(--text); }
+    .nav-item.active { background: var(--surface-2); color: var(--text); }
+    .nav-icon { font-size: 15px; width: 20px; text-align: center; }
+    .nav-badge { margin-left: auto; background: var(--accent); color: var(--accent-fg); font-size: 10px; font-family: 'DM Mono', monospace; padding: 1px 6px; border-radius: 99px; min-width: 18px; text-align: center; }
+    .nav-soon { margin-left: auto; font-size: 10px; color: var(--text-3); }
+    .main { flex: 1; min-width: 0; padding: 2rem 2rem 4rem; }
+    .page { display: none; animation: fadeUp 0.3s ease both; }
+    .page.active { display: block; }
+    .page-header { margin-bottom: 1.75rem; }
+    .page-eyebrow { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-3); margin-bottom: 0.4rem; }
+    .page-title { font-size: 1.6rem; font-weight: 500; letter-spacing: -0.02em; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    .page-title span { color: var(--text-3); font-weight: 300; }
+    .env-toggle { display: flex; gap: 2px; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 3px; }
+    .env-btn { padding: 0.3rem 0.75rem; border-radius: 4px; font-size: 11px; font-weight: 500; font-family: 'DM Mono', monospace; cursor: pointer; border: none; outline: none; background: transparent; color: var(--text-3); transition: all var(--t); }
     .env-btn.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-
-    .env-badge {
-      display: inline-flex; align-items: center; gap: 0.4rem;
-      padding: 0.25rem 0.65rem; border-radius: 99px;
-      font-size: 11px; font-family: 'DM Mono', monospace; font-weight: 500;
-      margin-bottom: 1.25rem; animation: fadeUp 0.3s ease both;
-    }
+    .env-badge { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.25rem 0.65rem; border-radius: 99px; font-size: 11px; font-family: 'DM Mono', monospace; font-weight: 500; margin-bottom: 1.25rem; }
     .env-badge.sandbox { background: var(--high-bg); color: var(--high); }
     .env-badge.integration { background: var(--int-bg); color: var(--int); }
     .env-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
-
-    /* Cards */
-    .card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); box-shadow: var(--shadow);
-      overflow: hidden; margin-bottom: 1.25rem; animation: fadeUp 0.4s ease 0.05s both;
-    }
-    .card-header {
-      padding: 1rem 1.5rem; border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .card-title {
-      font-size: 11px; font-weight: 500; font-family: 'DM Mono', monospace;
-      letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-2);
-    }
-
-    /* Form */
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; margin-bottom: 1.25rem; }
+    .card-header { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .card-title { font-size: 11px; font-weight: 500; font-family: 'DM Mono', monospace; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-2); }
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); }
-    .form-field { background: var(--surface); padding: 1.1rem 1.5rem; display: flex; flex-direction: column; gap: 0.45rem; }
+    .form-field { background: var(--surface); padding: 1rem 1.5rem; display: flex; flex-direction: column; gap: 0.4rem; }
     .form-field.full { grid-column: 1 / -1; }
-    label {
-      font-size: 10px; font-weight: 500; letter-spacing: 0.09em;
-      text-transform: uppercase; color: var(--text-3); font-family: 'DM Mono', monospace;
-    }
-    input, select {
-      width: 100%; background: var(--surface-2); border: 1px solid var(--border);
-      border-radius: var(--radius-sm); padding: 0.55rem 0.75rem; font-size: 14px;
-      font-family: 'DM Sans', sans-serif; color: var(--text);
-      outline: none; appearance: none; transition: border-color var(--t), box-shadow var(--t);
-    }
-    input:focus, select:focus { border-color: var(--border-strong); box-shadow: 0 0 0 3px rgba(128,128,128,0.1); }
-    input::placeholder { color: var(--text-3); }
-    select {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239b9b97' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-      background-repeat: no-repeat; background-position: right 0.75rem center;
-      padding-right: 2rem; cursor: pointer;
-    }
-
-    .action-bar {
-      padding: 1rem 1.5rem; border-top: 1px solid var(--border);
-      display: flex; align-items: center; gap: 0.75rem;
-    }
-
-    /* Buttons */
-    .btn {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      padding: 0.55rem 1.2rem; border-radius: var(--radius-sm);
-      font-size: 14px; font-weight: 500; font-family: 'DM Sans', sans-serif;
-      cursor: pointer; border: 1px solid transparent; outline: none; transition: all var(--t);
-    }
+    label { font-size: 10px; font-weight: 500; letter-spacing: 0.09em; text-transform: uppercase; color: var(--text-3); font-family: 'DM Mono', monospace; }
+    input, select, textarea { width: 100%; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.55rem 0.75rem; font-size: 14px; font-family: 'DM Sans', sans-serif; color: var(--text); outline: none; appearance: none; transition: border-color var(--t), box-shadow var(--t); }
+    input:focus, select:focus, textarea:focus { border-color: var(--border-strong); box-shadow: 0 0 0 3px rgba(128,128,128,0.1); }
+    input::placeholder, textarea::placeholder { color: var(--text-3); }
+    select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239b9b97' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.75rem center; padding-right: 2rem; cursor: pointer; }
+    .action-bar { padding: 1rem 1.5rem; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+    .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.55rem 1.2rem; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; border: 1px solid transparent; outline: none; transition: all var(--t); }
     .btn-primary { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
     .btn-primary:hover:not(:disabled) { opacity: 0.82; }
     .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
@@ -166,199 +87,147 @@
     .btn-danger { background: transparent; color: var(--low); border-color: var(--low); }
     .btn-danger:hover { background: var(--low-bg); }
     .btn-sm { padding: 0.35rem 0.75rem; font-size: 12px; }
-
+    .btn-xs { padding: 0.25rem 0.6rem; font-size: 11px; }
     .status { margin-left: auto; font-size: 12px; font-family: 'DM Mono', monospace; color: var(--text-3); }
-
-    .spinner {
-      width: 13px; height: 13px; border: 2px solid rgba(255,255,255,0.3);
-      border-top-color: white; border-radius: 50%;
-      animation: spin 0.7s linear infinite; display: inline-block;
-    }
-    @media (prefers-color-scheme: dark) {
-      .spinner { border-color: rgba(0,0,0,0.25); border-top-color: #111; }
-    }
-
+    .spinner { width: 13px; height: 13px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; }
     .lookup-row { padding: 1.1rem 1.5rem; display: flex; gap: 0.75rem; align-items: flex-end; }
     .lookup-field { flex: 1; display: flex; flex-direction: column; gap: 0.45rem; }
-
-    /* Results */
-    .results-section { animation: fadeUp 0.35s ease both; margin-top: 0.25rem; }
-    .results-header {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 0.75rem; padding: 0 0.25rem;
-    }
-    .results-label {
-      font-size: 11px; font-weight: 500; letter-spacing: 0.08em;
-      text-transform: uppercase; color: var(--text-3); font-family: 'DM Mono', monospace;
-    }
+    .results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; padding: 0 0.25rem; }
+    .results-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3); font-family: 'DM Mono', monospace; }
     .results-count { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text-3); }
-
-    .match-card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); box-shadow: var(--shadow);
-      overflow: hidden; margin-bottom: 0.75rem; animation: fadeUp 0.3s ease both;
-      transition: box-shadow var(--t), border-color var(--t);
-    }
+    .match-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; margin-bottom: 0.75rem; transition: box-shadow var(--t), border-color var(--t); }
     .match-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-lg); }
     .match-card.already-saved { border-color: var(--high); }
-
-    .match-inner {
-      padding: 1.25rem 1.5rem;
-      display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: start;
-    }
+    .match-inner { padding: 1.25rem 1.5rem; display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: start; }
     .match-name { font-size: 1rem; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 0.2rem; }
     .match-nhs { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--text-2); letter-spacing: 0.04em; }
     .match-meta { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; margin-top: 0.85rem; }
     .meta-item { display: flex; flex-direction: column; gap: 2px; }
-    .meta-label {
-      font-size: 10px; font-weight: 500; letter-spacing: 0.08em;
-      text-transform: uppercase; color: var(--text-3); font-family: 'DM Mono', monospace;
-    }
+    .meta-label { font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3); font-family: 'DM Mono', monospace; }
     .meta-value { font-size: 13px; color: var(--text); }
-
-    .score-badge {
-      display: inline-flex; align-items: center; gap: 0.35rem;
-      padding: 0.3rem 0.65rem; border-radius: 99px;
-      font-size: 11px; font-weight: 500; font-family: 'DM Mono', monospace; white-space: nowrap;
-    }
+    .score-badge { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.3rem 0.65rem; border-radius: 99px; font-size: 11px; font-weight: 500; font-family: 'DM Mono', monospace; white-space: nowrap; }
     .score-dot { width: 6px; height: 6px; border-radius: 50%; }
     .score-high { background: var(--high-bg); color: var(--high); }
     .score-high .score-dot { background: var(--high); }
-    .score-low  { background: var(--low-bg); color: var(--low); }
-    .score-low  .score-dot { background: var(--low); }
-
-    .match-footer {
-      padding: 0.85rem 1.5rem; border-top: 1px solid var(--border);
-      background: var(--surface-2); display: flex; align-items: center;
-      justify-content: space-between; gap: 0.75rem; flex-wrap: wrap;
-    }
+    .score-low { background: var(--low-bg); color: var(--low); }
+    .score-low .score-dot { background: var(--low); }
+    .match-footer { padding: 0.85rem 1.5rem; border-top: 1px solid var(--border); background: var(--surface-2); display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap; }
     .match-footer-text { font-size: 13px; color: var(--text-2); }
     .match-footer-text strong { color: var(--text); font-weight: 500; }
-
-    /* Confirm overlay */
-    .confirm-bar {
-      background: var(--warn-bg); border-top: 1px solid var(--warn);
-      padding: 0.85rem 1.5rem; display: none;
-      align-items: center; justify-content: space-between; gap: 0.75rem;
-    }
-    .confirm-bar.visible { display: flex; animation: fadeUp 0.2s ease both; }
+    .confirm-bar { background: var(--warn-bg); border-top: 1px solid var(--warn); padding: 0.85rem 1.5rem; display: none; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap; }
+    .confirm-bar.visible { display: flex; }
     .confirm-text { font-size: 13px; color: var(--warn); font-weight: 500; }
-
-    /* Saved patients list */
-    .saved-card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); box-shadow: var(--shadow);
-      overflow: hidden; margin-bottom: 0.75rem; animation: fadeUp 0.3s ease both;
-    }
-    .saved-inner {
-      padding: 1rem 1.5rem;
-      display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: center;
-    }
+    .saved-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; margin-bottom: 0.75rem; animation: fadeUp 0.3s ease both; }
+    .saved-inner { padding: 1rem 1.5rem; display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: center; }
     .saved-name { font-size: 14px; font-weight: 500; margin-bottom: 0.15rem; }
     .saved-nhs { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text-2); }
     .saved-meta { font-size: 12px; color: var(--text-3); margin-top: 0.25rem; }
     .saved-at { font-size: 11px; color: var(--text-3); font-family: 'DM Mono', monospace; margin-top: 0.1rem; }
-
-    /* States */
-    .state-box {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 3rem 1.5rem;
-      text-align: center; box-shadow: var(--shadow);
-    }
+    .staff-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
+    .staff-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; transition: box-shadow var(--t), border-color var(--t); animation: fadeUp 0.3s ease both; }
+    .staff-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-lg); }
+    .staff-card.inactive { opacity: 0.5; }
+    .staff-card-inner { padding: 1.25rem; }
+    .staff-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--surface-2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 600; margin-bottom: 0.85rem; color: var(--text-2); font-family: 'DM Mono', monospace; }
+    .staff-name { font-size: 15px; font-weight: 500; margin-bottom: 0.15rem; }
+    .staff-role { font-size: 12px; color: var(--text-3); margin-bottom: 0.75rem; }
+    .capability-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.85rem; min-height: 24px; }
+    .capability-tag { padding: 0.2rem 0.6rem; border-radius: 99px; font-size: 11px; font-family: 'DM Mono', monospace; font-weight: 500; }
+    .cap-flu { background: var(--high-bg); color: var(--high); border: 1px solid var(--high); }
+    .cap-admin { background: var(--warn-bg); color: var(--warn); border: 1px solid var(--warn); }
+    .cap-default { background: var(--int-bg); color: var(--int); border: 1px solid var(--int); }
+    .staff-contact { font-size: 12px; color: var(--text-3); display: flex; flex-direction: column; gap: 3px; }
+    .staff-card-footer { padding: 0.75rem 1.25rem; border-top: 1px solid var(--border); background: var(--surface-2); display: flex; gap: 0.5rem; justify-content: flex-end; }
+    .capability-checks { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 1rem 1.5rem; background: var(--surface); border-top: 1px solid var(--border); }
+    .cap-check { display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0.85rem; border-radius: 99px; border: 1px solid var(--border); cursor: pointer; font-size: 13px; transition: all var(--t); background: var(--surface-2); color: var(--text-2); user-select: none; }
+    .cap-check.checked-flu { background: var(--high-bg); color: var(--high); border-color: var(--high); }
+    .cap-check.checked-admin { background: var(--warn-bg); color: var(--warn); border-color: var(--warn); }
+    .cap-check.checked-default { background: var(--int-bg); color: var(--int); border-color: var(--int); }
+    .state-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 3rem 1.5rem; text-align: center; box-shadow: var(--shadow); }
     .state-icon { font-size: 1.75rem; margin-bottom: 0.75rem; opacity: 0.35; }
     .state-title { font-size: 15px; font-weight: 500; margin-bottom: 0.25rem; }
     .state-desc { font-size: 13px; color: var(--text-3); }
-
-    .error-box {
-      background: var(--low-bg); border: 1px solid var(--low);
-      border-radius: var(--radius); padding: 1rem 1.25rem;
-      font-size: 13px; color: var(--low); font-family: 'DM Mono', monospace; margin-top: 0.25rem;
-    }
-
-    .toast {
-      position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(10px);
-      background: var(--accent); color: var(--accent-fg);
-      padding: 0.65rem 1.25rem; border-radius: var(--radius-sm);
-      font-size: 13px; font-weight: 500; opacity: 0;
-      transition: all 0.3s ease; pointer-events: none; z-index: 100;
-      white-space: nowrap;
-    }
+    .error-box { background: var(--low-bg); border: 1px solid var(--low); border-radius: var(--radius); padding: 1rem 1.25rem; font-size: 13px; color: var(--low); font-family: 'DM Mono', monospace; margin-top: 0.25rem; }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; z-index: 200; padding: 1rem; opacity: 0; pointer-events: none; transition: opacity var(--t); }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-lg); width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; transform: translateY(16px); transition: transform var(--t); }
+    .modal-overlay.open .modal { transform: translateY(0); }
+    .modal-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .modal-title { font-size: 15px; font-weight: 500; }
+    .modal-close { background: none; border: none; cursor: pointer; color: var(--text-3); font-size: 18px; line-height: 1; transition: color var(--t); }
+    .modal-close:hover { color: var(--text); }
+    .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(10px); background: var(--accent); color: var(--accent-fg); padding: 0.65rem 1.25rem; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; opacity: 0; transition: all 0.3s ease; pointer-events: none; z-index: 300; white-space: nowrap; }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(10px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes spin { to { transform: rotate(360deg); } }
-
-    @media (max-width: 540px) {
-      .form-grid { grid-template-columns: 1fr; }
-      .form-field.full { grid-column: 1; }
-      .match-inner, .saved-inner { grid-template-columns: 1fr; }
-      header { flex-direction: column; }
-      .header-right { align-items: flex-start; }
-    }
+    @media (max-width: 700px) { .sidebar { display: none; } .main { padding: 1rem 1rem 4rem; } }
   </style>
 </head>
 <body>
-<div class="container">
+<div class="app">
 
-  <!-- ══════════ VIEW: SEARCH ══════════ -->
-  <div class="view active" id="viewSearch">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-eyebrow">NHS England · PDS</div>
+      <div class="sidebar-logo-title">Clinical Hub</div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-label">Patients</div>
+      <button class="nav-item active" id="nav-pageSearch" onclick="showPage('pageSearch')">
+        <span class="nav-icon">⊕</span> Patient Search
+      </button>
+      <button class="nav-item" id="nav-pageSaved" onclick="showPage('pageSaved')">
+        <span class="nav-icon">◎</span> Saved Patients
+        <span class="nav-badge" id="savedBadge" style="display:none">0</span>
+      </button>
+    </div>
+    <div class="nav-section" style="margin-top:0.5rem">
+      <div class="nav-section-label">Workforce</div>
+      <button class="nav-item" id="nav-pageStaff" onclick="showPage('pageStaff')">
+        <span class="nav-icon">👤</span> Staff
+        <span class="nav-badge" id="staffBadge" style="display:none">0</span>
+      </button>
+      <button class="nav-item" style="opacity:0.4;cursor:default">
+        <span class="nav-icon">⚕</span> Services <span class="nav-soon">Stage 3</span>
+      </button>
+      <button class="nav-item" style="opacity:0.4;cursor:default">
+        <span class="nav-icon">📅</span> Rota <span class="nav-soon">Stage 4</span>
+      </button>
+      <button class="nav-item" style="opacity:0.4;cursor:default">
+        <span class="nav-icon">🗓</span> Appointments <span class="nav-soon">Stage 5</span>
+      </button>
+    </div>
+  </aside>
 
-    <header>
-      <div>
-        <p class="eyebrow">NHS England · PDS FHIR API</p>
-        <h1>Patient Search <span>/ Demographics</span></h1>
-      </div>
-      <div class="header-right">
-        <div class="nav-tabs">
-          <button class="nav-tab active" id="tabSearch">Search</button>
-          <button class="nav-tab" id="tabSaved">Saved <span class="badge" id="savedBadge" style="display:none">0</span></button>
+  <main class="main">
+
+    <!-- PAGE: PATIENT SEARCH -->
+    <div class="page active" id="pageSearch">
+      <div class="page-header">
+        <div class="page-eyebrow">NHS England · PDS FHIR API</div>
+        <div class="page-title">
+          Patient Search <span>/ Demographics</span>
+          <div class="env-toggle">
+            <button class="env-btn active" id="btnSandbox">Sandbox</button>
+            <button class="env-btn" id="btnIntegration">Integration</button>
+          </div>
         </div>
-        <div class="env-toggle">
-          <button class="env-btn active" id="btnSandbox">Sandbox</button>
-          <button class="env-btn" id="btnIntegration">Integration</button>
-        </div>
       </div>
-    </header>
-
-    <!-- Search panel -->
-    <div id="panelSearch">
       <div class="env-badge sandbox" id="envBadge">
         <span class="env-badge-dot"></span>
         <span id="envBadgeText">Sandbox — synthetic data, no auth</span>
       </div>
-
       <div class="card">
         <div class="card-header"><span class="card-title">Demographic Search</span></div>
         <div class="form-grid">
+          <div class="form-field"><label>Family Name</label><input type="text" id="family" placeholder="Smith" /></div>
+          <div class="form-field"><label>Given Name</label><input type="text" id="given" placeholder="Jane" /></div>
+          <div class="form-field"><label>Date of Birth</label><input type="date" id="birthdate" /></div>
           <div class="form-field">
-            <label for="family">Family Name</label>
-            <input type="text" id="family" placeholder="Smith" />
+            <label>Gender</label>
+            <select id="gender"><option value="">Any</option><option value="male">Male</option><option value="female">Female</option><option value="other">Other</option><option value="unknown">Unknown</option></select>
           </div>
-          <div class="form-field">
-            <label for="given">Given Name</label>
-            <input type="text" id="given" placeholder="Jane" />
-          </div>
-          <div class="form-field">
-            <label for="birthdate">Date of Birth</label>
-            <input type="date" id="birthdate" />
-          </div>
-          <div class="form-field">
-            <label for="gender">Gender</label>
-            <select id="gender">
-              <option value="">Any</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="other">Other</option>
-              <option value="unknown">Unknown</option>
-            </select>
-          </div>
-          <div class="form-field full">
-            <label for="postcode">Postcode</label>
-            <input type="text" id="postcode" placeholder="DN19 7UD" style="max-width:180px" />
-          </div>
+          <div class="form-field full"><label>Postcode</label><input type="text" id="postcode" placeholder="DN19 7UD" style="max-width:180px" /></div>
         </div>
         <div class="action-bar">
           <button class="btn btn-primary" id="searchBtn">Search</button>
@@ -366,133 +235,169 @@
           <span class="status" id="searchStatus"></span>
         </div>
       </div>
-
       <div class="card">
         <div class="card-header"><span class="card-title">Direct NHS Number Lookup</span></div>
         <div class="lookup-row">
           <div class="lookup-field">
-            <label for="nhsInput">NHS Number</label>
-            <input type="text" id="nhsInput" placeholder="9000000033" maxlength="10"
-                   style="font-family:'DM Mono',monospace;letter-spacing:0.05em;max-width:200px" />
+            <label>NHS Number</label>
+            <input type="text" id="nhsInput" placeholder="9000000033" maxlength="10" style="font-family:'DM Mono',monospace;letter-spacing:0.05em;max-width:200px" />
           </div>
           <button class="btn btn-primary" id="lookupBtn">Lookup</button>
         </div>
       </div>
-
       <div id="resultsArea"></div>
     </div>
 
-    <!-- Saved patients panel -->
-    <div id="panelSaved" style="display:none">
+    <!-- PAGE: SAVED PATIENTS -->
+    <div class="page" id="pageSaved">
+      <div class="page-header">
+        <div class="page-eyebrow">Patients</div>
+        <div class="page-title">Saved Patients</div>
+      </div>
       <div id="savedArea"></div>
     </div>
 
-  </div>
+    <!-- PAGE: STAFF -->
+    <div class="page" id="pageStaff">
+      <div class="page-header">
+        <div class="page-eyebrow">Workforce</div>
+        <div class="page-title">
+          Staff Management
+          <button class="btn btn-primary btn-sm" onclick="openStaffModal()">+ Add Staff</button>
+        </div>
+      </div>
+      <div id="staffArea"></div>
+    </div>
 
+  </main>
 </div>
 
-<!-- Toast -->
+<!-- STAFF MODAL -->
+<div class="modal-overlay" id="staffModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="staffModalTitle">Add Staff Member</span>
+      <button class="modal-close" onclick="closeStaffModal()">✕</button>
+    </div>
+    <div class="form-grid">
+      <div class="form-field full"><label>Full Name</label><input type="text" id="sm_name" placeholder="e.g. Sarah Jones" /></div>
+      <div class="form-field">
+        <label>Role</label>
+        <select id="sm_role">
+          <option value="">Select role</option>
+          <option>Flu Vaccinator</option><option>Admin</option><option>Nurse</option>
+          <option>Healthcare Assistant</option><option>GP</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Status</label>
+        <select id="sm_active"><option value="true">Active</option><option value="false">Inactive</option></select>
+      </div>
+      <div class="form-field"><label>Email</label><input type="email" id="sm_email" placeholder="sarah@practice.nhs.uk" /></div>
+      <div class="form-field"><label>Phone</label><input type="tel" id="sm_phone" placeholder="07700 000000" /></div>
+    </div>
+    <div style="padding: 0.75rem 1.5rem; border-top: 1px solid var(--border); background: var(--surface-2);">
+      <span style="font-size:11px;font-family:'DM Mono',monospace;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-2)">Capabilities</span>
+    </div>
+    <div class="capability-checks" id="capChecks">
+      <label class="cap-check" data-cap="Flu Vaccinator" data-cls="checked-flu">Flu Vaccinator</label>
+      <label class="cap-check" data-cap="Admin" data-cls="checked-admin">Admin</label>
+      <label class="cap-check" data-cap="Nurse" data-cls="checked-default">Nurse</label>
+      <label class="cap-check" data-cap="Healthcare Assistant" data-cls="checked-default">Healthcare Assistant</label>
+      <label class="cap-check" data-cap="GP" data-cls="checked-default">GP</label>
+      <label class="cap-check" data-cap="Phlebotomist" data-cls="checked-default">Phlebotomist</label>
+    </div>
+    <div class="action-bar">
+      <button class="btn btn-primary" id="staffSaveBtn" onclick="saveStaff()">Save Staff Member</button>
+      <button class="btn btn-ghost" onclick="closeStaffModal()">Cancel</button>
+      <span class="status" id="staffModalStatus"></span>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
   const SANDBOX_BASE = "https://sandbox.api.service.nhs.uk/personal-demographics/FHIR/R4";
-  const RAILWAY_BASE = "https://web-production-ee325.up.railway.app"; // ← your Railway URL
+  const RAILWAY_BASE = "https://web-production-ee325.up.railway.app";
 
   let currentEnv = "sandbox";
-  let currentTab = "search";
   let savedNHSNumbers = new Set();
-  let pendingConfirm = {}; // { cardId -> matchData }
+  let pendingConfirm = {};
+  let editingStaffId = null;
 
-  // ── Tab switching ──────────────────────────────────────────────
-  function switchTab(tab) {
-    currentTab = tab;
-    document.getElementById("tabSearch").classList.toggle("active", tab === "search");
-    document.getElementById("tabSaved").classList.toggle("active", tab === "saved");
-    document.getElementById("panelSearch").style.display = tab === "search" ? "block" : "none";
-    document.getElementById("panelSaved").style.display  = tab === "saved"  ? "block" : "none";
-    if (tab === "saved") loadSavedPatients();
+  // ── Navigation ─────────────────────────────────────────────────
+  function showPage(id) {
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+    const navEl = document.getElementById("nav-" + id);
+    if (navEl) navEl.classList.add("active");
+    if (id === "pageSaved") loadSavedPatients();
+    if (id === "pageStaff") loadStaff();
   }
 
-  // ── Env switcher ───────────────────────────────────────────────
+  // ── Env ────────────────────────────────────────────────────────
   function setEnv(env) {
     currentEnv = env;
     document.getElementById("btnSandbox").classList.toggle("active", env === "sandbox");
     document.getElementById("btnIntegration").classList.toggle("active", env === "integration");
     const badge = document.getElementById("envBadge");
-    badge.className = `env-badge ${env}`;
+    badge.className = "env-badge " + env;
     document.getElementById("envBadgeText").textContent = env === "sandbox"
       ? "Sandbox — synthetic data, no auth"
       : "Integration — real test patients via Railway backend";
-    clearAll();
+    clearSearch();
   }
 
-  // ── Headers ────────────────────────────────────────────────────
+  // ── Helpers ────────────────────────────────────────────────────
   function sandboxHeaders() {
-    return {
-      "Accept": "application/fhir+json",
-      "X-Request-ID": crypto.randomUUID(),
-      "nhsd-end-user-organisation-ods": "Y12345",
-      "nhsd-session-urid": "555254240100",
-    };
+    return { "Accept": "application/fhir+json", "X-Request-ID": crypto.randomUUID(), "nhsd-end-user-organisation-ods": "Y12345", "nhsd-session-urid": "555254240100" };
   }
-
-  // ── Parsers ────────────────────────────────────────────────────
-  function formatNHS(n) {
-    if (!n || n === "—") return n;
-    return String(n).replace(/(\d{3})(\d{3})(\d{4})/, "$1 $2 $3");
-  }
+  function formatNHS(n) { if (!n || n === "—") return n; return String(n).replace(/(\d{3})(\d{3})(\d{4})/, "$1 $2 $3"); }
 
   function parseSinglePatient(patient, score) {
-    const nhsNumber = (patient.identifier || [])
-      .find(i => (i.system || "").includes("nhs-number"))?.value || "—";
+    const nhsNumber = (patient.identifier || []).find(i => (i.system || "").includes("nhs-number"))?.value || "—";
     const names = patient.name || [];
-    const name  = names.find(n => n.use === "usual") || names[0] || {};
+    const name = names.find(n => n.use === "usual") || names[0] || {};
     const fullName = [(name.given || []).join(" "), name.family].filter(Boolean).join(" ") || "Unknown";
     const addresses = patient.address || [];
     const addr = addresses.find(a => a.use === "home") || addresses[0] || {};
     const phone = (patient.telecom || []).find(t => t.system === "phone")?.value || "—";
-    const gp    = (patient.generalPractitioner || [])[0]?.display || "—";
+    const gp = (patient.generalPractitioner || [])[0]?.display || "—";
     return { nhsNumber, fullName, dob: patient.birthDate || "—", gender: patient.gender || "—", postcode: addr.postalCode || "—", phone, gp, score };
   }
+  function parseBundle(bundle) { return (bundle.entry || []).map(e => parseSinglePatient(e.resource, e.search?.score ?? 0)).sort((a, b) => b.score - a.score); }
 
-  function parseBundle(bundle) {
-    return (bundle.entry || [])
-      .map(e => parseSinglePatient(e.resource, e.search?.score ?? 0))
-      .sort((a, b) => b.score - a.score);
-  }
-
-  // ── API calls ──────────────────────────────────────────────────
+  // ── PDS calls ──────────────────────────────────────────────────
   async function searchSandbox(p) {
     const qs = new URLSearchParams({ family: p.family });
-    if (p.given)     qs.set("given", p.given);
-    if (p.birthdate) qs.set("birthdate", `eq${p.birthdate}`);
-    if (p.gender)    qs.set("gender", p.gender);
-    if (p.postcode)  qs.set("address-postalcode", p.postcode);
-    const res = await fetch(`${SANDBOX_BASE}/Patient?${qs}`, { headers: sandboxHeaders() });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    if (p.given) qs.set("given", p.given);
+    if (p.birthdate) qs.set("birthdate", "eq" + p.birthdate);
+    if (p.gender) qs.set("gender", p.gender);
+    if (p.postcode) qs.set("address-postalcode", p.postcode);
+    const res = await fetch(SANDBOX_BASE + "/Patient?" + qs, { headers: sandboxHeaders() });
+    if (!res.ok) throw new Error("HTTP " + res.status);
     return parseBundle(await res.json());
   }
-
   async function lookupSandbox(nhs) {
-    const res = await fetch(`${SANDBOX_BASE}/Patient/${nhs}`, { headers: sandboxHeaders() });
-    if (!res.ok) throw new Error(`HTTP ${res.status} — check NHS number`);
+    const res = await fetch(SANDBOX_BASE + "/Patient/" + nhs, { headers: sandboxHeaders() });
+    if (!res.ok) throw new Error("HTTP " + res.status + " — check NHS number");
     return [parseSinglePatient(await res.json(), 1.0)];
   }
-
   async function searchIntegration(p) {
     const qs = new URLSearchParams({ family: p.family });
-    if (p.given)     qs.set("given", p.given);
+    if (p.given) qs.set("given", p.given);
     if (p.birthdate) qs.set("birthdate", p.birthdate);
-    if (p.gender)    qs.set("gender", p.gender);
-    if (p.postcode)  qs.set("postcode", p.postcode);
-    const res = await fetch(`${RAILWAY_BASE}/patient/search?${qs}`);
-    if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.detail || `HTTP ${res.status}`); }
+    if (p.gender) qs.set("gender", p.gender);
+    if (p.postcode) qs.set("postcode", p.postcode);
+    const res = await fetch(RAILWAY_BASE + "/patient/search?" + qs);
+    if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.detail || "HTTP " + res.status); }
     return (await res.json()).matches;
   }
-
   async function lookupIntegration(nhs) {
-    const res = await fetch(`${RAILWAY_BASE}/patient/${nhs}`);
-    if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.detail || `HTTP ${res.status}`); }
+    const res = await fetch(RAILWAY_BASE + "/patient/" + nhs);
+    if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.detail || "HTTP " + res.status); }
     return [await res.json()];
   }
 
@@ -502,20 +407,12 @@
     if (!family) { showError("Family name is required."); return; }
     setSearchLoading(true);
     try {
-      const p = {
-        family, given: document.getElementById("given").value.trim(),
-        birthdate: document.getElementById("birthdate").value,
-        gender: document.getElementById("gender").value,
-        postcode: document.getElementById("postcode").value.trim(),
-      };
+      const p = { family, given: document.getElementById("given").value.trim(), birthdate: document.getElementById("birthdate").value, gender: document.getElementById("gender").value, postcode: document.getElementById("postcode").value.trim() };
       const matches = currentEnv === "sandbox" ? await searchSandbox(p) : await searchIntegration(p);
       renderMatches(matches);
-      document.getElementById("searchStatus").textContent = `${matches.length} result${matches.length !== 1 ? "s" : ""}`;
-    } catch (err) {
-      showError(err.message);
-    } finally {
-      setSearchLoading(false);
-    }
+      document.getElementById("searchStatus").textContent = matches.length + " result" + (matches.length !== 1 ? "s" : "");
+    } catch (err) { showError(err.message); }
+    finally { setSearchLoading(false); }
   }
 
   async function runLookup() {
@@ -525,14 +422,11 @@
     try {
       const matches = currentEnv === "sandbox" ? await lookupSandbox(nhs) : await lookupIntegration(nhs);
       renderMatches(matches);
-    } catch (err) {
-      showError(err.message);
-    } finally {
-      setLookupLoading(false);
-    }
+    } catch (err) { showError(err.message); }
+    finally { setLookupLoading(false); }
   }
 
-  function clearAll() {
+  function clearSearch() {
     ["family","given","birthdate","postcode","nhsInput"].forEach(id => document.getElementById(id).value = "");
     document.getElementById("gender").value = "";
     document.getElementById("resultsArea").innerHTML = "";
@@ -540,254 +434,250 @@
     pendingConfirm = {};
   }
 
-  // ── Render results ─────────────────────────────────────────────
+  // ── Render matches ─────────────────────────────────────────────
   function renderMatches(matches) {
     const area = document.getElementById("resultsArea");
     if (!matches || !matches.length) {
-      area.innerHTML = `<div class="results-section"><div class="state-box"><div class="state-icon">◎</div><div class="state-title">No patients found</div><div class="state-desc">Try broadening your search criteria.</div></div></div>`;
+      area.innerHTML = '<div class="state-box"><div class="state-icon">◎</div><div class="state-title">No patients found</div><div class="state-desc">Try broadening your search criteria.</div></div>';
       return;
     }
-
     window._matches = matches;
-
     const cards = matches.map((m, i) => {
-      const isHigh    = m.score >= 1.0;
-      const isSaved   = savedNHSNumbers.has(m.nhsNumber);
-      const cardId    = `card_${i}`;
-      return `
-        <div class="match-card ${isSaved ? 'already-saved' : ''}" id="${cardId}" style="animation-delay:${i * 0.06}s">
-          <div class="match-inner">
-            <div>
-              <div class="match-name">${m.fullName}</div>
-              <div class="match-nhs">${formatNHS(m.nhsNumber)}</div>
-              <div class="match-meta">
-                <div class="meta-item"><span class="meta-label">DOB</span><span class="meta-value">${m.dob || "—"}</span></div>
-                <div class="meta-item"><span class="meta-label">Gender</span><span class="meta-value" style="text-transform:capitalize">${m.gender || "—"}</span></div>
-                <div class="meta-item"><span class="meta-label">Postcode</span><span class="meta-value">${m.postcode || "—"}</span></div>
-                <div class="meta-item"><span class="meta-label">Phone</span><span class="meta-value">${m.phone || "—"}</span></div>
-                <div class="meta-item"><span class="meta-label">GP</span><span class="meta-value">${m.gp || "—"}</span></div>
-              </div>
-            </div>
-            <span class="score-badge ${isHigh ? 'score-high' : 'score-low'}">
-              <span class="score-dot"></span>${isHigh ? "High" : "Low"}
-            </span>
-          </div>
-          <div class="match-footer">
-            <span class="match-footer-text">NHS <strong>${formatNHS(m.nhsNumber)}</strong></span>
-            <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
-              <button class="btn btn-ghost btn-sm" onclick="copyToClipboard('${m.nhsNumber}', this)">Copy NHS No.</button>
-              ${isSaved
-                ? `<button class="btn btn-ghost btn-sm" disabled style="color:var(--high);border-color:var(--high)">✓ Saved</button>`
-                : `<button class="btn btn-success btn-sm" onclick="promptSave('${cardId}', ${i})">Save Patient</button>`
-              }
-            </div>
-          </div>
-          <div class="confirm-bar" id="confirm_${cardId}">
-            <span class="confirm-text">Save <strong>${m.fullName}</strong> to the database?</span>
-            <div style="display:flex;gap:0.5rem">
-              <button class="btn btn-ghost btn-sm" onclick="cancelSave('${cardId}')">Cancel</button>
-              <button class="btn btn-success btn-sm" id="confirmBtn_${cardId}" onclick="confirmSave('${cardId}', ${i})">Confirm Save</button>
-            </div>
-          </div>
-        </div>`;
+      const isHigh = m.score >= 1.0;
+      const isSaved = savedNHSNumbers.has(m.nhsNumber);
+      const cid = "card_" + i;
+      return '<div class="match-card ' + (isSaved ? 'already-saved' : '') + '" id="' + cid + '" style="animation-delay:' + (i * 0.06) + 's">' +
+        '<div class="match-inner"><div>' +
+        '<div class="match-name">' + m.fullName + '</div>' +
+        '<div class="match-nhs">' + formatNHS(m.nhsNumber) + '</div>' +
+        '<div class="match-meta">' +
+        '<div class="meta-item"><span class="meta-label">DOB</span><span class="meta-value">' + (m.dob || "—") + '</span></div>' +
+        '<div class="meta-item"><span class="meta-label">Gender</span><span class="meta-value" style="text-transform:capitalize">' + (m.gender || "—") + '</span></div>' +
+        '<div class="meta-item"><span class="meta-label">Postcode</span><span class="meta-value">' + (m.postcode || "—") + '</span></div>' +
+        '<div class="meta-item"><span class="meta-label">Phone</span><span class="meta-value">' + (m.phone || "—") + '</span></div>' +
+        '<div class="meta-item"><span class="meta-label">GP</span><span class="meta-value">' + (m.gp || "—") + '</span></div>' +
+        '</div></div>' +
+        '<span class="score-badge ' + (isHigh ? 'score-high' : 'score-low') + '"><span class="score-dot"></span>' + (isHigh ? 'High' : 'Low') + '</span>' +
+        '</div>' +
+        '<div class="match-footer"><span class="match-footer-text">NHS <strong>' + formatNHS(m.nhsNumber) + '</strong></span>' +
+        '<div style="display:flex;gap:0.5rem;flex-wrap:wrap">' +
+        '<button class="btn btn-ghost btn-sm" onclick="copyToClipboard(\'' + m.nhsNumber + '\', this)">Copy NHS No.</button>' +
+        (isSaved
+          ? '<button class="btn btn-ghost btn-sm" disabled style="color:var(--high);border-color:var(--high)">✓ Saved</button>'
+          : '<button class="btn btn-success btn-sm" onclick="promptSave(\'' + cid + '\',' + i + ')">Save Patient</button>') +
+        '</div></div>' +
+        '<div class="confirm-bar" id="confirm_' + cid + '">' +
+        '<span class="confirm-text">Save <strong>' + m.fullName + '</strong> to database?</span>' +
+        '<div style="display:flex;gap:0.5rem">' +
+        '<button class="btn btn-ghost btn-sm" onclick="cancelSave(\'' + cid + '\')">Cancel</button>' +
+        '<button class="btn btn-success btn-sm" id="confirmBtn_' + cid + '" onclick="confirmSave(\'' + cid + '\',' + i + ')">Confirm Save</button>' +
+        '</div></div></div>';
     }).join("");
-
-    area.innerHTML = `
-      <div class="results-section">
-        <div class="results-header">
-          <span class="results-label">Results</span>
-          <span class="results-count">${matches.length} match${matches.length !== 1 ? "es" : ""}</span>
-        </div>
-        ${cards}
-      </div>`;
+    area.innerHTML = '<div><div class="results-header"><span class="results-label">Results</span><span class="results-count">' + matches.length + ' match' + (matches.length !== 1 ? 'es' : '') + '</span></div>' + cards + '</div>';
   }
 
-  // ── Save flow ──────────────────────────────────────────────────
+  // ── Save patient ───────────────────────────────────────────────
   function promptSave(cardId, idx) {
-    // Hide any other open confirms first
-    Object.keys(pendingConfirm).forEach(id => {
-      if (id !== cardId) cancelSave(id);
-    });
+    Object.keys(pendingConfirm).forEach(id => { if (id !== cardId) cancelSave(id); });
     pendingConfirm[cardId] = idx;
-    document.getElementById(`confirm_${cardId}`).classList.add("visible");
+    document.getElementById("confirm_" + cardId).classList.add("visible");
   }
-
   function cancelSave(cardId) {
     delete pendingConfirm[cardId];
-    const bar = document.getElementById(`confirm_${cardId}`);
+    const bar = document.getElementById("confirm_" + cardId);
     if (bar) bar.classList.remove("visible");
   }
-
   async function confirmSave(cardId, idx) {
     const m = window._matches[idx];
-    const btn = document.getElementById(`confirmBtn_${cardId}`);
-    btn.disabled = true;
-    btn.innerHTML = `<span class="spinner"></span>`;
-
+    const btn = document.getElementById("confirmBtn_" + cardId);
+    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
     try {
-      const res = await fetch(`${RAILWAY_BASE}/saved-patients`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          nhsNumber: m.nhsNumber,
-          fullName:  m.fullName,
-          dob:       m.dob,
-          gender:    m.gender,
-          postcode:  m.postcode,
-          phone:     m.phone,
-          gp:        m.gp,
-        })
-      });
-
-      if (!res.ok) throw new Error("Save failed");
-
+      const res = await fetch(RAILWAY_BASE + "/saved-patients", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ nhsNumber: m.nhsNumber, fullName: m.fullName, dob: m.dob, gender: m.gender, postcode: m.postcode, phone: m.phone, gp: m.gp }) });
+      if (!res.ok) throw new Error();
       savedNHSNumbers.add(m.nhsNumber);
       cancelSave(cardId);
-
-      // Update the card footer to show saved state
       const card = document.getElementById(cardId);
       card.classList.add("already-saved");
-      const footer = card.querySelector(".match-footer > div:last-child");
-      footer.innerHTML = `
-        <button class="btn btn-ghost btn-sm" onclick="copyToClipboard('${m.nhsNumber}', this)">Copy NHS No.</button>
-        <button class="btn btn-ghost btn-sm" disabled style="color:var(--high);border-color:var(--high)">✓ Saved</button>`;
-
-      // Update badge count
+      card.querySelector(".match-footer > div:last-child").innerHTML =
+        '<button class="btn btn-ghost btn-sm" onclick="copyToClipboard(\'' + m.nhsNumber + '\', this)">Copy NHS No.</button>' +
+        '<button class="btn btn-ghost btn-sm" disabled style="color:var(--high);border-color:var(--high)">✓ Saved</button>';
       updateSavedBadge();
-      showToast(`${m.fullName} saved successfully`);
-
-    } catch (err) {
-      btn.disabled = false;
-      btn.textContent = "Confirm Save";
-      showToast("Failed to save — is the backend running?");
-    }
+      showToast(m.fullName + " saved successfully");
+    } catch { btn.disabled = false; btn.textContent = "Confirm Save"; showToast("Failed to save"); }
   }
 
   // ── Saved patients ─────────────────────────────────────────────
   async function loadSavedPatients() {
     const area = document.getElementById("savedArea");
-    area.innerHTML = `<div class="state-box"><div class="state-icon">⟳</div><div class="state-title">Loading…</div></div>`;
-
+    area.innerHTML = '<div class="state-box"><div class="state-icon">⟳</div><div class="state-title">Loading…</div></div>';
     try {
-      const res = await fetch(`${RAILWAY_BASE}/saved-patients`);
-      if (!res.ok) throw new Error("Could not load saved patients");
+      const res = await fetch(RAILWAY_BASE + "/saved-patients");
+      if (!res.ok) throw new Error("Could not load");
       const data = await res.json();
-      const patients = data.patients;
-
-      // Update local set
-      savedNHSNumbers = new Set(patients.map(p => p.nhs_number));
+      savedNHSNumbers = new Set(data.patients.map(p => p.nhs_number));
       updateSavedBadge();
-
-      if (!patients.length) {
-        area.innerHTML = `<div class="state-box"><div class="state-icon">◎</div><div class="state-title">No saved patients yet</div><div class="state-desc">Search for a patient and click Save Patient.</div></div>`;
+      if (!data.patients.length) {
+        area.innerHTML = '<div class="state-box"><div class="state-icon">◎</div><div class="state-title">No saved patients yet</div><div class="state-desc">Search for a patient and click Save Patient.</div></div>';
         return;
       }
-
-      area.innerHTML = `
-        <div class="results-header" style="margin-bottom:0.75rem;padding:0 0.25rem">
-          <span class="results-label">Saved Patients</span>
-          <span class="results-count">${patients.length} record${patients.length !== 1 ? "s" : ""}</span>
-        </div>
-        ${patients.map((p, i) => `
-          <div class="saved-card" style="animation-delay:${i * 0.04}s">
-            <div class="saved-inner">
-              <div>
-                <div class="saved-name">${p.full_name || "—"}</div>
-                <div class="saved-nhs">${formatNHS(p.nhs_number)}</div>
-                <div class="saved-meta">${p.dob || "—"} · ${p.gender || "—"} · ${p.postcode || "—"} · ${p.gp || "—"}</div>
-                <div class="saved-at">Saved ${new Date(p.saved_at).toLocaleDateString("en-GB", { day:"numeric", month:"short", year:"numeric", hour:"2-digit", minute:"2-digit" })}</div>
-              </div>
-              <div style="display:flex;flex-direction:column;gap:0.5rem;align-items:flex-end">
-                <button class="btn btn-ghost btn-sm" onclick="copyToClipboard('${p.nhs_number}', this)">Copy NHS No.</button>
-                <button class="btn btn-danger btn-sm" onclick="deletePatient('${p.nhs_number}', this)">Remove</button>
-              </div>
-            </div>
-          </div>`).join("")}`;
-
-    } catch (err) {
-      area.innerHTML = `<div class="error-box">Error: ${err.message}</div>`;
-    }
+      area.innerHTML = '<div class="results-header" style="padding:0 0.25rem;margin-bottom:0.75rem"><span class="results-label">Saved Patients</span><span class="results-count">' + data.patients.length + ' record' + (data.patients.length !== 1 ? 's' : '') + '</span></div>' +
+        data.patients.map((p, i) =>
+          '<div class="saved-card" style="animation-delay:' + (i * 0.04) + 's"><div class="saved-inner"><div>' +
+          '<div class="saved-name">' + (p.full_name || "—") + '</div>' +
+          '<div class="saved-nhs">' + formatNHS(p.nhs_number) + '</div>' +
+          '<div class="saved-meta">' + (p.dob || "—") + ' · ' + (p.gender || "—") + ' · ' + (p.postcode || "—") + ' · ' + (p.gp || "—") + '</div>' +
+          '<div class="saved-at">Saved ' + new Date(p.saved_at).toLocaleDateString("en-GB", { day:"numeric", month:"short", year:"numeric", hour:"2-digit", minute:"2-digit" }) + '</div>' +
+          '</div><div style="display:flex;flex-direction:column;gap:0.5rem;align-items:flex-end">' +
+          '<button class="btn btn-ghost btn-sm" onclick="copyToClipboard(\'' + p.nhs_number + '\', this)">Copy NHS No.</button>' +
+          '<button class="btn btn-danger btn-sm" onclick="deleteSavedPatient(\'' + p.nhs_number + '\', this)">Remove</button>' +
+          '</div></div></div>'
+        ).join("");
+    } catch (err) { area.innerHTML = '<div class="error-box">Error: ' + err.message + '</div>'; }
   }
 
-  async function deletePatient(nhsNumber, btn) {
-    if (!confirm("Remove this patient from saved records?")) return;
+  async function deleteSavedPatient(nhs, btn) {
+    if (!confirm("Remove this patient?")) return;
     btn.disabled = true;
     try {
-      await fetch(`${RAILWAY_BASE}/saved-patients/${nhsNumber}`, { method: "DELETE" });
-      savedNHSNumbers.delete(nhsNumber);
-      updateSavedBadge();
-      showToast("Patient removed");
-      loadSavedPatients();
-    } catch {
-      btn.disabled = false;
-      showToast("Failed to remove patient");
-    }
+      await fetch(RAILWAY_BASE + "/saved-patients/" + nhs, { method: "DELETE" });
+      savedNHSNumbers.delete(nhs); updateSavedBadge(); showToast("Patient removed"); loadSavedPatients();
+    } catch { btn.disabled = false; }
   }
 
   function updateSavedBadge() {
-    const badge = document.getElementById("savedBadge");
-    const count = savedNHSNumbers.size;
-    badge.textContent = count;
-    badge.style.display = count > 0 ? "flex" : "none";
+    const b = document.getElementById("savedBadge");
+    b.textContent = savedNHSNumbers.size;
+    b.style.display = savedNHSNumbers.size > 0 ? "flex" : "none";
   }
+
+  // ══════════════════════════════════════════════════════════════
+  // STAFF
+  // ══════════════════════════════════════════════════════════════
+  async function loadStaff() {
+    const area = document.getElementById("staffArea");
+    area.innerHTML = '<div class="state-box"><div class="state-icon">⟳</div><div class="state-title">Loading…</div></div>';
+    try {
+      const res = await fetch(RAILWAY_BASE + "/staff?active_only=false");
+      if (!res.ok) throw new Error("Could not load staff");
+      const data = await res.json();
+      const staff = data.staff;
+      const active = staff.filter(s => s.active).length;
+      const badge = document.getElementById("staffBadge");
+      badge.textContent = active; badge.style.display = active > 0 ? "flex" : "none";
+      if (!staff.length) {
+        area.innerHTML = '<div class="state-box"><div class="state-icon">👤</div><div class="state-title">No staff added yet</div><div class="state-desc">Click "Add Staff" to get started.</div></div>';
+        return;
+      }
+      area.innerHTML = '<div class="staff-grid">' + staff.map((s, i) => staffCardHTML(s, i)).join("") + '</div>';
+    } catch (err) { area.innerHTML = '<div class="error-box">Error: ' + err.message + '</div>'; }
+  }
+
+  function capTagClass(cap) {
+    if (cap === "Flu Vaccinator") return "cap-flu";
+    if (cap === "Admin") return "cap-admin";
+    return "cap-default";
+  }
+
+  function staffCardHTML(s, i) {
+    const initials = s.full_name.split(" ").map(w => w[0]).join("").substring(0, 2).toUpperCase();
+    const caps = (s.capabilities || []).length
+      ? s.capabilities.map(c => '<span class="capability-tag ' + capTagClass(c) + '">' + c + '</span>').join("")
+      : '<span style="font-size:12px;color:var(--text-3)">No capabilities</span>';
+    const safeStaff = JSON.stringify(s).replace(/\\/g, "\\\\").replace(/'/g, "\\'").replace(/"/g, "&quot;");
+    return '<div class="staff-card ' + (s.active ? '' : 'inactive') + '" style="animation-delay:' + (i * 0.05) + 's">' +
+      '<div class="staff-card-inner">' +
+      '<div class="staff-avatar">' + initials + '</div>' +
+      '<div class="staff-name">' + s.full_name + '</div>' +
+      '<div class="staff-role">' + (s.role || "No role") + (s.active ? '' : ' · <span style="color:var(--low)">Inactive</span>') + '</div>' +
+      '<div class="capability-tags">' + caps + '</div>' +
+      '<div class="staff-contact">' + (s.email ? '<span>✉ ' + s.email + '</span>' : '') + (s.phone ? '<span>✆ ' + s.phone + '</span>' : '') + '</div>' +
+      '</div>' +
+      '<div class="staff-card-footer">' +
+      '<button class="btn btn-ghost btn-xs" onclick=\'openStaffModal(' + safeStaff + ')\'>Edit</button>' +
+      '<button class="btn btn-danger btn-xs" onclick="deleteStaff(' + s.id + ',\'' + s.full_name + '\')">Remove</button>' +
+      '</div></div>';
+  }
+
+  function openStaffModal(staff) {
+    staff = staff || null;
+    editingStaffId = staff ? staff.id : null;
+    document.getElementById("staffModalTitle").textContent = staff ? "Edit Staff Member" : "Add Staff Member";
+    document.getElementById("sm_name").value  = staff ? staff.full_name : "";
+    document.getElementById("sm_role").value  = staff ? (staff.role || "") : "";
+    document.getElementById("sm_email").value = staff ? (staff.email || "") : "";
+    document.getElementById("sm_phone").value = staff ? (staff.phone || "") : "";
+    document.getElementById("sm_active").value = staff ? String(staff.active) : "true";
+    document.getElementById("staffModalStatus").textContent = "";
+    document.querySelectorAll(".cap-check").forEach(el => el.className = "cap-check");
+    if (staff && staff.capabilities) {
+      staff.capabilities.forEach(cap => {
+        const el = document.querySelector('.cap-check[data-cap="' + cap + '"]');
+        if (el) el.className = "cap-check " + el.dataset.cls;
+      });
+    }
+    document.getElementById("staffModal").classList.add("open");
+  }
+
+  function closeStaffModal() {
+    document.getElementById("staffModal").classList.remove("open");
+    editingStaffId = null;
+  }
+
+  async function saveStaff() {
+    const name = document.getElementById("sm_name").value.trim();
+    if (!name) { document.getElementById("staffModalStatus").textContent = "Name is required."; return; }
+    const capabilities = Array.from(document.querySelectorAll(".cap-check")).filter(el => el.className !== "cap-check").map(el => el.dataset.cap);
+    const payload = { full_name: name, role: document.getElementById("sm_role").value, email: document.getElementById("sm_email").value.trim(), phone: document.getElementById("sm_phone").value.trim(), active: document.getElementById("sm_active").value === "true", capabilities };
+    const btn = document.getElementById("staffSaveBtn");
+    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Saving…';
+    try {
+      const url = editingStaffId ? RAILWAY_BASE + "/staff/" + editingStaffId : RAILWAY_BASE + "/staff";
+      const method = editingStaffId ? "PUT" : "POST";
+      const res = await fetch(url, { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+      if (!res.ok) throw new Error("Save failed");
+      closeStaffModal();
+      showToast(editingStaffId ? name + " updated" : name + " added");
+      loadStaff();
+    } catch (err) { document.getElementById("staffModalStatus").textContent = err.message; }
+    finally { btn.disabled = false; btn.textContent = "Save Staff Member"; }
+  }
+
+  async function deleteStaff(id, name) {
+    if (!confirm("Remove " + name + " from the system?")) return;
+    try {
+      await fetch(RAILWAY_BASE + "/staff/" + id, { method: "DELETE" });
+      showToast(name + " removed"); loadStaff();
+    } catch { showToast("Failed to remove"); }
+  }
+
+  // Capability toggle clicks
+  document.querySelectorAll(".cap-check").forEach(el => {
+    el.addEventListener("click", () => {
+      const isChecked = el.className !== "cap-check";
+      el.className = isChecked ? "cap-check" : "cap-check " + el.dataset.cls;
+    });
+  });
 
   // ── Utilities ──────────────────────────────────────────────────
-  function showError(msg) {
-    document.getElementById("resultsArea").innerHTML = `<div class="error-box">Error: ${msg}</div>`;
-  }
-
-  function setSearchLoading(on) {
-    const btn = document.getElementById("searchBtn");
-    btn.disabled = on;
-    btn.innerHTML = on ? `<span class="spinner"></span> Searching…` : "Search";
-    if (on) document.getElementById("searchStatus").textContent = "Searching…";
-  }
-
-  function setLookupLoading(on) {
-    const btn = document.getElementById("lookupBtn");
-    btn.disabled = on;
-    btn.innerHTML = on ? `<span class="spinner"></span>` : "Lookup";
-  }
-
-  function copyToClipboard(text, btn) {
-    navigator.clipboard.writeText(text).then(() => {
-      const orig = btn.textContent;
-      btn.textContent = "Copied!";
-      setTimeout(() => btn.textContent = orig, 1500);
-    });
-  }
-
+  function showError(msg) { document.getElementById("resultsArea").innerHTML = '<div class="error-box">Error: ' + msg + '</div>'; }
+  function setSearchLoading(on) { const btn = document.getElementById("searchBtn"); btn.disabled = on; btn.innerHTML = on ? '<span class="spinner"></span> Searching…' : "Search"; if (on) document.getElementById("searchStatus").textContent = "Searching…"; }
+  function setLookupLoading(on) { const btn = document.getElementById("lookupBtn"); btn.disabled = on; btn.innerHTML = on ? '<span class="spinner"></span>' : "Lookup"; }
+  function copyToClipboard(text, btn) { navigator.clipboard.writeText(text).then(() => { const o = btn.textContent; btn.textContent = "Copied!"; setTimeout(() => btn.textContent = o, 1500); }); }
   let toastTimer;
-  function showToast(msg) {
-    const t = document.getElementById("toast");
-    t.textContent = msg;
-    t.classList.add("show");
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => t.classList.remove("show"), 2500);
-  }
+  function showToast(msg) { const t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 2500); }
 
   // ── Wire up ────────────────────────────────────────────────────
   document.getElementById("searchBtn").addEventListener("click", runSearch);
-  document.getElementById("clearBtn").addEventListener("click", clearAll);
+  document.getElementById("clearBtn").addEventListener("click", clearSearch);
   document.getElementById("lookupBtn").addEventListener("click", runLookup);
   document.getElementById("btnSandbox").addEventListener("click", () => setEnv("sandbox"));
   document.getElementById("btnIntegration").addEventListener("click", () => setEnv("integration"));
-  document.getElementById("tabSearch").addEventListener("click", () => switchTab("search"));
-  document.getElementById("tabSaved").addEventListener("click", () => switchTab("saved"));
-
   document.getElementById("nhsInput").addEventListener("keydown", e => { if (e.key === "Enter") runLookup(); });
-  ["family","given","birthdate","postcode"].forEach(id => {
-    document.getElementById(id).addEventListener("keydown", e => { if (e.key === "Enter") runSearch(); });
-  });
+  ["family","given","birthdate","postcode"].forEach(id => document.getElementById(id).addEventListener("keydown", e => { if (e.key === "Enter") runSearch(); }));
+  document.getElementById("staffModal").addEventListener("click", e => { if (e.target === document.getElementById("staffModal")) closeStaffModal(); });
 
-  // Load saved count on startup
-  fetch(`${RAILWAY_BASE}/saved-patients`)
-    .then(r => r.json())
-    .then(d => {
-      savedNHSNumbers = new Set(d.patients.map(p => p.nhs_number));
-      updateSavedBadge();
-    })
-    .catch(() => {});
+  // Init
+  fetch(RAILWAY_BASE + "/saved-patients").then(r => r.json()).then(d => { savedNHSNumbers = new Set(d.patients.map(p => p.nhs_number)); updateSavedBadge(); }).catch(() => {});
 </script>
 </body>
 </html>
